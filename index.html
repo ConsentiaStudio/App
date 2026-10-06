@@ -3,18 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="2.0.2">
-<meta name="consentia-agenda-firma" content="iY4iaabq9jnfh5vTw1TcolNcvA9BQyr68Ho85o7NOHLv3HjmX7RHDS2lU+QXbHGQWjL1TgonruqGpnumtfTdBg==">
+<meta name="consentia-agenda-version" content="2.1.0">
+<meta name="consentia-agenda-firma" content="4cNO7Fhd8Y0ibudF6aYpVYm5gOIiSuTbN1YkHfkUyDAJRLgR3kG9JKM87Zj6OybQW0Pf90btWeqVHO9z01TWBw==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-PPKhov0Onn/ResiGQD7luct1iM1pU9GOM0mzF8WVveE='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-q1HZoWGa3FSqSQjryXAQ6kneyqtf0vzjBNrcKtdrBJU='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
 <!-- Consentía Studio · agenda y calculadora (solo consulta), para el móvil y para el ordenador.
      Las agendas y las listas de precios están cifradas: esta página las descarga de GitHub y las descifra AQUÍ,
      en el navegador, con la contraseña que escribes. La contraseña no se envía a ningún sitio.
-     La calculadora calcula con los precios de cada centro; no cobra ni guarda nada. -->
+     La calculadora calcula con los precios de cada centro; no cobra ni guarda nada.
+     En el aparato no se guarda nada: ni la contraseña ni sus claves (se escribe cada vez que se abre la página). -->
 <style>
 :root{--ink:#111113;--pink:#ff2b91;--muted:#77736c;--line:#e4e0d8;--bg:#f4f2ee;--good:#1d8a4a}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.35 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -46,13 +47,18 @@ main{padding:10px 12px 40px;max-width:720px;margin:0 auto}
 .note{font-size:12px;color:var(--muted);text-align:center;margin:14px 0}
 .warn{background:#fff4d6;border:1px solid #ecd18c;color:#5c3d00;border-radius:6px;padding:10px 12px;margin:10px 0;font-size:13px}
 .bad{background:#fde4ec;border:1px solid #eeb3c4;color:#6d0a28;border-radius:6px;padding:10px 12px;margin:10px 0;font-size:13px}
-.login{max-width:380px;margin:12vh auto 0;padding:24px 20px;background:#fff;border:1px solid var(--line);border-radius:8px}
-.login h1{font-size:20px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px}
-.login p{color:var(--muted);font-size:13px;margin:0 0 16px}
-.login input[type=password]{width:100%;font:inherit;font-size:17px;padding:12px;border:1px solid #bdb9b1;border-radius:6px}
-.login label{display:flex;gap:8px;align-items:center;font-size:13px;margin:12px 0;color:#444}
-.login button{width:100%;background:var(--pink);color:#fff;border:0;border-radius:6px;padding:13px;font:inherit;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+/* La entrada: el nombre, la contraseña y el logotipo. No se desplaza (ni «rebota» en el móvil). */
+html.lock,html.lock body{height:100%;overflow:hidden;overscroll-behavior:none}
+html.lock body{position:fixed;top:0;left:0;right:0;bottom:0}
+.login{max-width:360px;margin:0 auto;padding:17vh 24px 0;text-align:center}
+.login h1{margin:0 0 26px;font-size:20px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;color:var(--ink)}
+.login .logo{display:block;width:88px;height:88px;margin:30px auto 0}
+.login p{color:var(--muted);font-size:14px;margin:0 0 16px}
+.login input[type=password]{display:block;width:100%;font:inherit;font-size:17px;text-align:center;padding:14px;border:1px solid #d6d2ca;border-radius:14px;background:#fff;-webkit-appearance:none;appearance:none}
+.login input[type=password]:focus{outline:0;border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,43,145,.18)}
+.login button{width:100%;margin-top:12px;background:var(--ink);color:#fff;border:0;border-radius:14px;padding:14px;font:inherit;font-size:16px;font-weight:600}
 .login button[disabled]{opacity:.6}
+.login .bad,.login .warn{text-align:left;margin-top:14px}
 .status{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);margin:8px 0}
 .status span{flex:1;min-width:0}
 .status button{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:4px;padding:5px 9px;font:inherit;font-size:12px;font-weight:700}
@@ -92,14 +98,15 @@ main.wide .status{margin:6px 12px}
 .ap.done>*{opacity:.66}
 .now{position:absolute;left:0;right:0;border-top:2px solid var(--pink);z-index:4;pointer-events:none}
 .sheetBack{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(17,17,19,.45);z-index:20;display:flex;align-items:flex-end}
-.sheet{background:#fff;width:100%;max-height:72vh;overflow:auto;border-radius:12px 12px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom))}
+.sheet{background:#fff;width:100%;max-height:86vh;overflow:auto;border-radius:18px 18px 0 0;padding:10px 16px calc(18px + env(safe-area-inset-bottom))}
+.sheet::before{content:'';display:block;width:36px;height:5px;border-radius:3px;background:#d6d2ca;margin:0 auto 12px}
 .sheet h2{margin:2px 0;font-size:19px}
-@media (min-width:720px){.sheetBack{align-items:center;justify-content:center}.sheet{max-width:440px;border-radius:12px;padding-bottom:18px}}
+@media (min-width:720px){.sheetBack{align-items:center;justify-content:center}.sheet{max-width:440px;border-radius:18px;padding-bottom:18px}.sheet::before{display:none}}
 .sheet .h{font:700 13px ui-monospace,Consolas,monospace;color:#56534e}
 .sheet p{margin:8px 0 0}
 .sheet .who{color:var(--muted);font-size:13px}
 .sheet .row{padding:9px 0;border-bottom:1px solid #f0ede7}
-.sheet button{width:100%;margin-top:14px;background:var(--ink);color:#fff;border:0;border-radius:6px;padding:12px;font:inherit;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.sheet button{width:100%;margin-top:14px;background:var(--ink);color:#fff;border:0;border-radius:13px;padding:13px;font:inherit;font-size:16px;font-weight:600}
 /* Agenda y calculadora en la misma pantalla: en el ordenador, una al lado de la otra; en el móvil, dos pestañas abajo. */
 .split{display:block}
 .split.m-calc .pA,.split.m-agenda .pC{display:none}
@@ -125,56 +132,89 @@ main.wide .status{margin:6px 12px}
 @keyframes segOn{from{transform:scale(.96);box-shadow:none}to{transform:none}}
 @media (prefers-reduced-motion:reduce){.modes button,.modes button.on.go{animation:none;transition:none}}
 body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--mh) + 18px + env(safe-area-inset-bottom))}
-.pC{background:#fff}
+/* La calculadora. Sin título: arriba, tres pestañas como un control segmentado; debajo, lo que se puede añadir; y la
+   cuenta, en una barra abajo que se abre al tocarla (en el ordenador, siempre a la vista debajo de la lista).
+   Los extras se eligen por su grupo (como las categorías de los servicios) y, si tienen foto, se ven en baldosas
+   con la foto; al tocar uno sube su ficha, con la foto en grande y lo justo que hay que decir (nº de uñas…). */
+.pC{background:var(--bg)}
 .calc{display:flex;flex-direction:column;min-height:60vh}
-.cHead{padding:12px 14px 8px;border-bottom:1px solid var(--line)}
-.cHead b{display:block;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
-.cHead small{color:var(--muted);font-size:12px}
-.cTabs{display:flex;border-bottom:1px solid var(--line);background:#faf9f6}
-.cTabs button{flex:1;background:transparent;border:0;border-bottom:3px solid transparent;padding:10px 4px;font:inherit;font-size:12.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#56534e}
-.cTabs button.on{color:var(--ink);border-bottom-color:var(--pink);background:#fff}
-.cBody{padding:10px 12px}
-.cSearch{width:100%;font:inherit;font-size:15px;padding:9px 10px;border:1px solid #bdb9b1;border-radius:6px;margin-bottom:8px}
-.cCats{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}
-.cCats button{flex:none;background:#efece6;border:0;border-radius:16px;padding:6px 12px;font:inherit;font-size:13px;color:var(--ink)}
-.cCats button.on{background:var(--ink);color:#fff}
-.cItem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:6px;padding:9px 10px;margin:0 0 6px;font:inherit;color:var(--ink)}
+.cTabs{order:0;display:flex;gap:2px;margin:12px 12px 0;padding:3px;border-radius:12px;background:rgba(118,118,128,.16)}
+.cTabs button{flex:1 1 0;min-width:0;height:36px;border:0;border-radius:9px;background:transparent;color:#5b5b61;font:inherit;font-size:14px;font-weight:600;-webkit-tap-highlight-color:transparent}
+.cTabs button.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(17,17,19,.12),0 1px 1px rgba(17,17,19,.06)}
+.cBody{order:1;padding:12px 12px 16px}
+.cSearch{display:block;width:100%;font:inherit;font-size:16px;padding:10px 12px;border:0;border-radius:11px;background:rgba(118,118,128,.14);margin-bottom:10px;-webkit-appearance:none;appearance:none}
+.cSearch:focus{outline:2px solid var(--pink);background:#fff}
+.cCats{display:flex;gap:6px;overflow-x:auto;margin:0 -12px;padding:0 12px 10px;scrollbar-width:none}
+.cCats::-webkit-scrollbar{display:none}
+.cCats button{flex:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font:inherit;font-size:13.5px;font-weight:600;color:#44423d;-webkit-tap-highlight-color:transparent}
+.cCats button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.cCats button i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--pink);margin-left:6px;vertical-align:2px}
+.cList{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(17,17,19,.05)}
+.cItem{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid #f0ede7;padding:12px 14px;font:inherit;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.cItem:last-child{border-bottom:0}
 .cItem b{flex:1;min-width:0;font-weight:600}
-.cItem small{display:block;color:var(--muted);font-weight:400;font-size:12px}
-.cItem .p{flex:none;font:700 14px ui-monospace,Consolas,monospace}
-.cItem:active,.cChip:active{background:#ffe3f0}
-.cGrp{border:1px solid var(--line);border-radius:6px;margin:0 0 6px;overflow:hidden}
-.cGrp>button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:#faf9f6;border:0;padding:10px;font:inherit;font-weight:800;font-size:13px;text-align:left;color:var(--ink)}
-.cGrp>button small{font-weight:600;color:var(--muted);font-size:11.5px;text-align:right}
-.cGrp .in{display:none;padding:10px;border-top:1px solid var(--line)}
-.cGrp.open .in{display:block}
-.cChips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.cChip{background:#fff;border:1px solid #bdb9b1;border-radius:16px;padding:6px 11px;font:inherit;font-size:13px;color:var(--ink)}
-.cRow{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
-.cRow label{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:700;color:#56534e;text-transform:uppercase;letter-spacing:.04em}
-.cRow label.g{flex:1 1 100%}
-.cRow select,.cRow input{font:inherit;font-size:15px;padding:8px;border:1px solid #bdb9b1;border-radius:6px;background:#fff;text-transform:none;letter-spacing:0;font-weight:400;max-width:100%}
-.cRow input{width:92px}
-.cRow .add{background:var(--ink);color:#fff;border:0;border-radius:6px;padding:10px 14px;font:inherit;font-weight:800}
-.cHint{font-size:12.5px;color:#44423d;margin-top:8px}
-.cHint b{display:block;margin-top:2px}
-.cHead{order:0}.cTicket{order:1}.cTabs{order:2}.cBody{order:3}.cTotal{order:4}
-.cTicket{border-bottom:2px solid var(--ink);padding:10px 12px 6px;background:#fffdf8}
-.cTicket h4{margin:0 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
-.cTicket h4 button{border:1px solid var(--line);background:#fff;border-radius:4px;padding:4px 8px;font:inherit;font-size:12px;color:var(--ink)}
-.cLine{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #f0ede7}
-.cLine div{flex:1;min-width:0}.cLine small{display:block;color:var(--muted);font-size:12px}
-.cLine .p{flex:none;font:700 13px ui-monospace,Consolas,monospace;white-space:nowrap}
-.cLine button{flex:none;border:0;background:#f0ede7;border-radius:50%;width:26px;height:26px;font:inherit;line-height:1;color:var(--ink)}
-.cDisc{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px}
-.cDisc select{flex:1;font:inherit;padding:7px;border:1px solid #bdb9b1;border-radius:6px;background:#fff;min-width:0}
-.cTotal{position:sticky;bottom:0;background:var(--ink);color:#fff;display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 14px;margin-top:auto}
-body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
-.cTotal span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ccc}
-.cTotal b{font:800 22px ui-monospace,Consolas,monospace}
-.cTotal.flash{background:var(--pink)}
+.cItem small{display:block;color:var(--muted);font-weight:400;font-size:12.5px;margin-top:1px}
+.cItem .p{flex:none;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cItem .p.x{color:var(--pink);font-size:13.5px;max-width:46%;white-space:normal;text-align:right}
+.cItem:active,.xCard:active{background:#fff0f7}
+.xGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.xCard{display:flex;flex-direction:column;text-align:left;background:#fff;border:0;border-radius:14px;overflow:hidden;padding:0;font:inherit;color:var(--ink);box-shadow:0 1px 2px rgba(17,17,19,.06);-webkit-tap-highlight-color:transparent}
+.xCard .ph{display:block;width:100%;aspect-ratio:1/1;background:#efece6}
+.xCard .ph img{display:block;width:100%;height:100%;object-fit:cover}
+.xCard .ph.no{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ffe9f3,#f4f2ee);color:#e2a9c4;font:500 34px Didot,"Bodoni 72","Times New Roman",serif}
+.xCard .tx{display:block;padding:9px 11px 11px}
+.xCard b{display:block;font-size:14px;font-weight:600;line-height:1.25}
+.xCard small{display:block;margin-top:3px;font-size:12.5px;font-weight:700;color:var(--pink)}
+.cHint{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
+/* Ficha de un extra */
+.sheet .xFoto{display:block;width:100%;max-height:38vh;object-fit:contain;border-radius:12px;background:#f4f2ee;margin-bottom:12px}
+.sheet .xPrecio{color:var(--pink);font-weight:700;margin-top:2px}
+.sheet .xAyuda{color:#44423d;font-size:13.5px;line-height:1.4}
+.stp{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #f0ede7}
+.sheet .xAyuda+.stp,.sheet .xPrecio+.stp{margin-top:12px}
+.stp>span{font-weight:600}
+.stp>div{display:flex;align-items:center;background:rgba(118,118,128,.14);border-radius:11px}
+.sheet .stp button{width:46px;height:40px;margin:0;padding:0;border:0;border-radius:11px;background:transparent;color:var(--ink);font:400 24px/1 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.sheet .stp button[disabled]{opacity:.3}
+.stp output{min-width:64px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.stp input{width:128px;font:inherit;font-size:17px;font-weight:700;text-align:right;padding:9px 12px;border:1px solid #d6d2ca;border-radius:11px;background:#fff}
+.stp input:focus{outline:0;border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,43,145,.18)}
+.xRes{margin-top:10px;padding:11px 12px;border-radius:12px;background:#f4f2ee;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.xRes.no{background:#fff4d6;color:#5c3d00;font-weight:600}
+.xRes:empty{display:none}
 .sheet button.calcBtn{background:var(--pink);margin-top:14px}
-.sheet button.calcBtn+button{margin-top:8px}
+.sheet button.calcBtn+button{margin-top:8px;background:transparent;color:var(--ink)}
+/* La cuenta */
+.tkBack{display:none}
+.cTicket{order:2;display:none;background:#fff}
+.cTicket h4{margin:0 0 4px;font-size:17px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.cTicket h4 span{flex:1}
+.cTicket h4 button{border:0;background:rgba(118,118,128,.14);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:var(--ink)}
+.cTicket h4 button.x{width:30px;height:30px;padding:0;font-size:18px;line-height:1}
+.cTicket .cHint{margin:0 0 6px}
+.cLine{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #f0ede7}
+.cLine div{flex:1;min-width:0;font-weight:600}.cLine small{display:block;color:var(--muted);font-size:12.5px;font-weight:400}
+.cLine .p{flex:none;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cLine button{flex:none;border:0;background:rgba(118,118,128,.14);border-radius:50%;width:28px;height:28px;font:inherit;font-size:17px;line-height:1;color:#5b5b61}
+.cDisc{padding:10px 0 2px}
+.cDisc>span{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#5b5b61;margin-bottom:6px}
+.cDisc>span b{color:var(--good);font-variant-numeric:tabular-nums}
+.cDisc div{display:flex;flex-wrap:wrap;gap:6px}
+.cDisc button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:#44423d}
+.cDisc button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.cTotal{order:3;position:fixed;left:12px;right:12px;bottom:calc(var(--mh) + 10px + env(safe-area-inset-bottom));z-index:8;width:auto;margin:0;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:10px 16px;border:0;border-radius:16px;background:var(--ink);color:#fff;font:inherit;text-align:left;box-shadow:0 8px 22px rgba(17,17,19,.22);-webkit-tap-highlight-color:transparent;transition:background .2s}
+.cTotal span{display:flex;align-items:center;gap:8px;min-width:0;font-size:15px;font-weight:600}
+.cTotal span i{font-style:normal;font-size:12.5px;font-weight:700;min-width:22px;text-align:center;background:var(--pink);border-radius:999px;padding:2px 7px}
+.cTotal span small{font-size:13px;font-weight:400;color:#b9b6b0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cTotal span svg{flex:none;width:16px;height:16px;fill:none;stroke:#b9b6b0;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.calc.tk .cTotal span svg{transform:rotate(180deg)}
+.cTotal b{flex:none;font-size:21px;font-weight:700;font-variant-numeric:tabular-nums}
+.cTotal.flash{background:var(--pink)}
+@media (max-width:1039px){
+  .cBody{padding-bottom:84px}
+  .calc.tk .tkBack{display:block;position:fixed;top:0;left:0;right:0;bottom:0;z-index:6;background:rgba(17,17,19,.4)}
+  .calc.tk .cTicket{display:block;position:fixed;left:0;right:0;bottom:0;z-index:7;max-height:74vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(var(--mh) + 84px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(17,17,19,.2)}
+}
 @media (min-width:1040px){
   .split{display:grid;grid-template-columns:minmax(0,1fr) 400px;align-items:start}
   .split.m-calc .pA,.split.m-agenda .pC{display:block}
@@ -183,8 +223,11 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
   .pC{position:sticky;top:var(--hh,56px);height:calc(100vh - var(--hh,56px));overflow:hidden;border-left:1px solid var(--line)}
   .calc{height:100%;min-height:0}
   .cBody{flex:1 1 auto;overflow:auto;min-height:140px}
-  .cTabs{order:1}.cBody{order:2}.cTicket{order:3;flex:0 1 auto;max-height:40%;overflow:auto;border-bottom:0;border-top:2px solid var(--ink);background:#fff}
-  body.has-modes .cTotal{position:static}
+  .cCats{flex-wrap:wrap;overflow:visible;margin:0;padding:0 0 10px}
+  .cTicket{display:block;flex:0 1 auto;max-height:42%;overflow:auto;border-top:1px solid var(--line);padding:12px 14px 6px}
+  .cTicket h4 button.x{display:none}
+  .cTotal{position:static;width:100%;border-radius:0;box-shadow:none;cursor:default}
+  .cTotal span svg{display:none}
 }
 .other{display:flex;gap:6px;margin-top:8px}.other input{flex:1;font:inherit;padding:8px;border:1px solid #bdb9b1;border-radius:4px}.other button{border:0;background:var(--ink);color:#fff;border-radius:4px;padding:0 12px;font:inherit}
 </style>
@@ -198,6 +241,8 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
   var PX = 1.2, COL_W = 112, TIME_W = 42; // píxeles por minuto, ancho mínimo de cada columna y de la columna de las horas
   var PAGE_V = (document.querySelector('meta[name="consentia-agenda-version"]') || {}).content || '', SS_RL = 'consentia-agenda-recarga', SS_MAN = 'consentia-agenda-recarga-a-mano';
   var app = document.getElementById('app');
+  // El logotipo (la C con la estrella), reducido a 176 px, dentro de la propia página: no se carga nada de fuera.
+  var LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALAAAACwCAMAAACYaRRsAAAAYFBMVEUAAAARERMRERIQEBIQEBIRERIQEBIUFBERERENDRAODhIODhIODhIPDxInJwAPDxIoKCgAAC4PDxERESI/PwAzMzMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6i7dIAAAAIHRSTlMA/dGQbk6xFDErSWuJqQbNBgXiDwQFAAAAAAAAAAAAAGM6LtcAAAWzSURBVHja7Z3pcus6CIAtEGhx0tOz3Pd/1RsvSZzIThMLZHnGTNs/bdTPGCQEyG6aQw455JBDXkkIsbWIyMyXn9ZSWP5bH4nIbcfq6HQGkwgwkp/9AHa/po1oI7J5IWB9TcARwfwo0Lo6gMM7tIOg3x6YZiyB0RJFH4KP0T6aygNyeWBHiXLZhsTvaXoP2g2BE1xemqRcxLst+42A/bMxsH9t6rc/tFsAO3zGjT97582SXXHgxBrsOyuWv36KCwO7Z2sA/94Hv69KBlcSOHW2Dz47IS4FbJP14CNfHa8WSgEn3mZOHw4A19tSBDgx38/028tIbG0BYJ8ubSsuehzklz6wT2OwNQF4mAxAZXmNy/VbTeCQ8q79d1wCOKRxL6723RLAKS985U/mesAzkboXuHw1YDRyBjFdo7WArZFV8E3FVGyCyFNw05w0gR2IK/g6qVMpA16zJs/ZhAowzSUZSEYLKsCzmRInowYqZBDmLBSZKAB7o2IRoycrAM+nJZ3QwFTG47otWaXAv+cVjFK+QWUUbGK1wAuJ9VArsDdqJtzQ+XzmIAyM88DcVCphIfl/qhXYLgDbWoGXallxZxZhQqXA7RKw25lF/HE7swioVMG0BFzrNIx7A14s0GOdvM7sDDjuDdguAtud+VytwL92BuxgZ8De7AyYDuB37DCsj1xbZeC5/XLXKBDlZzUZYIAw+y+hVmB+RhsL2bh+QGUN42PUZzOq1518qQOTnw7EuaWTF+uGCPA3tBeru3rerS6cMbQysDNt1y7ib7ND9tYAtE2iG6V3vElbTkYtTdskmr4NM150OmlzabMG1AX+O4xC5tTzMmRvDIy2DePE8vqOJXB5A5YADjx0Fvr8YrA2cMOniwmP+u31HJvKgXHkhf4re2erDoyI42CtSHJGX8ND6BBG/w61A9t77zNfwSsGHhY3oPtOAXzNwEPsMGh1mNFO2TrWBMZJoNP3y2LzG3OJ9YDHyXecx+i6xNnMsqgasB1PJQDeJgu6/sLWBzxGvugCsPeh9zi8JxawMuDbaZWH2BXDnZirAn7aiMPklKAN4wVhNcDBTg8xEgE6118Ccp8nBYz9NbGrAdhZvp0HG8+Jdk7XnW7rBvPDiTCwtF7H0sCDbjFM8hLNdwuTbEoLYys/VWES9Hx8rdMwPo51uQ+w3kWkN6FPZ2+7HQekZWu3/uiw8q7ZG+y2y4KZW2XgYLBzOb8b4C57KVsE1gZGA6KtLeqZn/xMRNn88D+WLpawdiJFuhVHuWRA4kV29aKMdOOlVdcwyPY6KdfpzuL1Sd1KKBrRVW5YOzUTKd0sL8v7Kr7M9+4+eyIM/GJtRhGPBun+QlYGFu9+Q0XgU27J6LNpgiWUId/AGXSB5ZvflgNMEWCFthbWa8d1rNGW3ir2D1sjz/vCiCViqy8FYthbD/ziTOwrBV5syK31HMfixEbNzmyi2qM9YV8t2osHLOs9nrYUAEG1wEtu56sltprz2pfGAgSKXkdGYadkFb0OVRwYtMKfMX7FMhOFhBE7pVWTdR7XcA1V5CccrzUTY+bTjT7zO4E7qXdEmlXmCdJbgoLKUWFWXOSjwtrhVQNVlI8nWPVI9zdLq9hrB9YgbMWsHfXNPNCOs6cI1Y3AzPrR5t4w3YcSREGj4CJbwyhmFFYw5PvMKtbpKBTLbqSPQrXreYtsvZ0A8ThGqZ035xJf58diG2+bR+yheHouPpsFfrDvJYljUtmh0PsN93ajbGLy3O/3FBZ4u+xnouSfbfJ+zq9tNpD01QCvkSftw1vl72Py/Prl5+3T/Y7whhWdRMtmbA1/NIWHN6JsnLwPOPfWG0vee+eC99Se+MVLTzYRy+++ouWNV0oUsoz3mLmm2pMfmsFfvWioukeeOW8XXuAD3FZbYnCBLDKM4H/g4oGtr7Uy/QB+Ufjl+7/mkEMOOeSQQw45pCL5H6AxJmEsvijVAAAAAElFTkSuQmCC';
   // Repositorio: https://USUARIO.github.io/REPOSITORIO/ (o ?repo=usuario/nombre solo en este ordenador, para pruebas).
   var cfg = (function () {
     var q = new URLSearchParams(location.search), h = location.hostname, seg = location.pathname.split('/').filter(Boolean);
@@ -207,32 +252,16 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
   })();
   // Esta página nunca usa «service workers»: si alguien hubiera instalado uno, se quita.
   try { if (navigator.serviceWorker) navigator.serviceWorker.getRegistrations().then(function (rs) { var here = location.origin + '/' + (location.pathname.split('/').filter(Boolean)[0] || '') + '/'; rs.forEach(function (r) { if (r.scope === location.origin + '/' || r.scope.indexOf(here) === 0) r.unregister(); }); }).catch(function () { }); } catch (e) { }
-  // pws: contraseñas escritas en esta visita (solo en memoria). keys: claves ya calculadas (por sal); con
-  // «Recordar» se guardan en este navegador como claves NO exportables: la contraseña nunca se guarda.
-  var st = { pws: [], keys: {}, remember: false, branches: [], centers: [], cur: 0, day: today(), msg: '', bad: '', loading: false, ready: false, lastCheck: null, cached: false, view: 'cols', scroll: null, stale: '', fresh: '', want: '', mode: 'agenda', lines: [], disc: -1, from: '', cTab: 'serv', cCat: '', cOpen: {}, cKey: '', cNode: null };
-  try { if (localStorage.getItem(LS_VW) === 'lista') st.view = 'lista'; } catch (e) { }
+  // pws: contraseñas escritas en esta visita. keys: claves ya calculadas (por sal). Las dos, solo en memoria: al
+  // cerrar o recargar la página hay que escribir la contraseña otra vez.
+  // fotos: las fotos de los extras de cada centro, por la huella que trae su lista de precios (se bajan una vez).
+  var st = { pws: [], keys: {}, branches: [], centers: [], cur: 0, day: today(), msg: '', bad: '', loading: false, ready: false, lastCheck: null, cached: false, view: 'cols', scroll: null, stale: '', fresh: '', want: '', mode: 'agenda', lines: [], disc: -1, from: '', cTab: 'serv', cCat: '', xGrp: '', tk: false, cKey: '', cNode: null, fotos: {}, fRev: 0 };
   st.want = wanted(); // centro pedido en la dirección (…/#getafe)
 
-  /* ---------- claves guardadas en el navegador (IndexedDB) ---------- */
-  function idb(mode, fn) {
-    return new Promise(function (resolve) {
-      try {
-        var r = indexedDB.open('consentia-agenda', 1);
-        r.onupgradeneeded = function () { r.result.createObjectStore('claves'); };
-        r.onerror = function () { resolve(null); };
-        r.onsuccess = function () {
-          var db = r.result, out = null;
-          try { var tx = db.transaction('claves', mode); out = fn(tx.objectStore('claves')); tx.oncomplete = function () { db.close(); resolve(out); }; tx.onerror = tx.onabort = function () { db.close(); resolve(null); }; }
-          catch (e) { db.close(); resolve(null); }
-        };
-      } catch (e) { resolve(null); }
-    });
-  }
-  function loadKeys() {
-    return idb('readonly', function (os) { var out = {}; var c = os.openCursor(); c.onsuccess = function () { var cur = c.result; if (cur) { if (cur.value && cur.value.type === 'secret') out[cur.key] = cur.value; cur.continue(); } }; return out; });
-  }
-  function saveKey(id, key) { if (st.remember) idb('readwrite', function (os) { os.put(key, id); }); }
-  function clearKeys() { return idb('readwrite', function (os) { os.clear(); }); }
+  /* ---------- en el aparato no se guarda nada ---------- */
+  // Hasta la 2.0.2 había un «Recordar en este aparato» que guardaba las claves (no la contraseña) en el navegador.
+  // Ya no: lo que hubiera dejado se borra al abrir la página y al salir.
+  function forget() { try { localStorage.removeItem(LS_BR); localStorage.removeItem(LS_VW); } catch (e) { } try { if (window.indexedDB) indexedDB.deleteDatabase('consentia-agenda'); } catch (e) { } }
 
   function el(tag, attrs, kids) { var e = document.createElement(tag); if (attrs) Object.keys(attrs).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'on') Object.keys(attrs.on).forEach(function (ev) { e.addEventListener(ev, attrs.on[ev]); }); else if (k === 'style') e.setAttribute('style', attrs[k]); else e.setAttribute(k, attrs[k]); }); (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); }); return e; }
   // Iconos de la barra de abajo (trazo, 24×24). Cada pieza: [etiqueta, atributos]; la clase «f» va rellena.
@@ -287,7 +316,7 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
   function sheet(kids, more) {
     var old = document.querySelector('.sheetBack'); if (old) old.remove();
     var back = el('div', { class: 'sheetBack' }); var close = function () { back.remove(); };
-    back.appendChild(el('div', { class: 'sheet', id: 'ficha' }, kids.concat([more ? more(close) : null, el('button', { text: 'Cerrar', on: { click: close } })])));
+    back.appendChild(el('div', { class: 'sheet', id: 'ficha' }, kids.concat([more ? more(close) : null, el('button', { id: 'cerrarFicha', type: 'button', text: 'Cerrar', on: { click: close } })])));
     back.addEventListener('click', function (e) { if (e.target === back) close(); });
     document.body.appendChild(back);
   }
@@ -305,7 +334,7 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
   function mShort(v) { return money(v).replace(',00', ''); }
   function nUn(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
   function objs(v, n) { return (Array.isArray(v) ? v : []).slice(0, n).map(function (x) { return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; }); } // (lo que no sea un objeto, vacío: los servicios se señalan por su posición)
-  function calcOf(d) { var c = d && d.calc; return c && typeof c === 'object' && Array.isArray(c.services) ? { services: objs(c.services, 400), addons: objs(c.addons, 200), bonos: objs(c.bonos, 60), discounts: objs(c.discounts, 30) } : null; }
+  function calcOf(d) { var c = d && d.calc; return c && typeof c === 'object' && Array.isArray(c.services) ? { services: objs(c.services, 400), addons: objs(c.addons, 200), bonos: objs(c.bonos, 60), discounts: objs(c.discounts, 30), fotos: typeof c.fotos === 'string' && /^[0-9a-f]{8,64}$/.test(c.fotos) ? c.fotos : '' } : null; }
   // Lo mismo que hace el programa al cobrar (renderer/js/core/domain.js → addonPrice / addonPriceText).
   function addonPrice(a, count, unit) {
     if (a.mode === 'steps') {
@@ -348,90 +377,146 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     var calc = calcOf(d), miss = 0; st.lines = []; st.disc = -1;
     (a.si || []).forEach(function (i) { var s = calc.services[i]; if (s) st.lines.push({ kind: 'service', name: txt(s.n, 80), detail: txt(s.c, 60), amount: r2(s.p) }); else miss++; });
     st.from = (txt(a.c, 80) || 'Sin clienta') + ' · ' + txt(a.s, 5) + (miss ? ' · ' + (miss === 1 ? 'falta 1 servicio que ya no está en la lista' : 'faltan ' + miss + ' servicios que ya no están en la lista') : '');
-    st.mode = 'calc'; st.cTab = 'extras'; st.cNode = null; render(); window.scrollTo(0, 0);
+    st.mode = 'calc'; st.cTab = 'extras'; st.tk = false; st.cNode = null; render(); window.scrollTo(0, 0);
   }
   function modesBadge() { var b = document.querySelector('.modes small'); if (b) { var c = st.centers[st.cur]; b.textContent = st.lines.length ? money(totals(calcOf(c && c.data)).total) : ''; } }
+
+  /* ---------- fotos de los extras ---------- */
+  // Van en un archivo aparte de la misma zona (fotos.json), cifrado con la misma clave que la agenda y ligado a
+  // «<centro>:fotos». La lista de precios dice su huella (calc.fotos) y cada extra, la clave de la suya (ph). Se bajan
+  // una sola vez por visita, y solo cuando se van a ver (al abrir los extras de la calculadora).
+  function okPhoto(v) { return typeof v === 'string' && v.length <= 200000 && /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+\/]+={0,2}$/.test(v); }
+  function fotoOf(calc, a) { var f = calc && calc.fotos && st.fotos[calc.fotos], u = f && f.map && typeof a.ph === 'string' ? f.map[a.ph] : ''; return okPhoto(u) ? u : ''; }
+  function fotosWait(calc) { var f = calc && calc.fotos && st.fotos[calc.fotos]; return !!(calc && calc.fotos && (!f || (!f.map && !f.failed))); } // (todavía bajando)
+  function loadFotos(c) {
+    var d = c && c.data, h = d && d.calc && typeof d.calc.fotos === 'string' ? d.calc.fotos : '';
+    if (!h || !/^[0-9a-f]{8,64}$/.test(h) || !c.file) return;
+    var known = st.fotos[h]; if (known && (known.map || !known.failed || Date.now() - known.failed < 60000)) return; // ya están, se están bajando o acaban de fallar
+    var slot = st.fotos[h] = { map: null, failed: 0 };
+    getJson(cfg.raw + '/' + cfg.repo + '/' + (c.sha || c.key) + '/fotos.json').then(function (f) {
+      if (!f || f.id !== c.file.id + ':fotos') throw new Error('fotos');
+      return openFile(f);
+    }).then(function (data) {
+      if (!data || data.kind !== 'fotos' || data.h !== h || !data.fotos || typeof data.fotos !== 'object') throw new Error('fotos');
+      var map = {}; Object.keys(data.fotos).slice(0, 80).forEach(function (k) { if (/^[0-9a-f]{8,32}$/.test(k) && okPhoto(data.fotos[k])) map[k] = data.fotos[k]; });
+      slot.map = map;
+    }).catch(function () { slot.failed = Date.now(); }).then(function () { if (st.fotos[h] !== slot) return; st.fRev++; if (st.centers.length && (st.pws.length || Object.keys(st.keys).length)) render(); });
+  }
+
   var ticketBox = null, totalBox = null, calcData = null;
+  var CHEV = [['path', { d: 'M6 15l6-6 6 6' }]];
+  // La cuenta: en el móvil es una barra abajo (lo que lleva sumado) que al tocarla sube con sus líneas.
+  function setTk(v) { st.tk = !!v && st.lines.length > 0; if (st.cNode) st.cNode.className = 'calc' + (st.tk ? ' tk' : ''); }
   function drawTicket(flash) {
-    if (!ticketBox) return; ticketBox.innerHTML = ''; totalBox.innerHTML = ''; var t = totals(calcData);
-    ticketBox.appendChild(el('h4', {}, ['Cuenta', st.lines.length ? el('button', { id: 'vaciar', text: 'Vaciar', on: { click: function () { st.lines = []; st.disc = -1; st.from = ''; drawTicket(); modesBadge(); } } }) : null]));
+    if (!ticketBox) return; ticketBox.innerHTML = ''; totalBox.innerHTML = ''; var t = totals(calcData), n = st.lines.length;
+    if (!n && st.tk) setTk(false);
+    ticketBox.appendChild(el('h4', {}, [el('span', { text: 'Cuenta' }), n ? el('button', { id: 'vaciar', type: 'button', text: 'Vaciar', on: { click: function () { st.lines = []; st.disc = -1; st.from = ''; drawTicket(); modesBadge(); } } }) : null, el('button', { class: 'x', id: 'cerrarCuenta', type: 'button', title: 'Cerrar', text: '×', on: { click: function () { setTk(false); } } })]));
     if (st.from) ticketBox.appendChild(el('div', { class: 'cHint', id: 'deCita', text: 'Cita de ' + st.from }));
-    if (!st.lines.length) ticketBox.appendChild(el('div', { class: 'none', text: 'Toca un servicio o un extra para añadirlo.' }));
-    st.lines.forEach(function (l, i) { ticketBox.appendChild(el('div', { class: 'cLine' }, [el('div', {}, [l.name, l.detail ? el('small', { text: l.detail }) : null]), el('span', { class: 'p', text: money(l.amount) }), el('button', { title: 'Quitar', text: '×', on: { click: function () { st.lines.splice(i, 1); if (!st.lines.length) st.from = ''; drawTicket(); modesBadge(); } } })])); });
-    if (calcData && calcData.discounts.length && st.lines.length) {
-      var sel = el('select', { id: 'descuento' }, [el('option', { value: '-1', text: 'Sin descuento' })].concat(calcData.discounts.map(function (d, i) { var o = el('option', { value: String(i), text: txt(d.n, 60) + ' · ' + (+d.pct || 0) + '%' }); if (i === st.disc) o.setAttribute('selected', ''); return o; })));
-      sel.addEventListener('change', function () { st.disc = +sel.value; drawTicket(); modesBadge(); });
-      ticketBox.appendChild(el('div', { class: 'cDisc' }, ['Descuento', sel, t.discount ? el('span', { class: 'p', text: '−' + money(t.discount) }) : null]));
+    if (!n) ticketBox.appendChild(el('div', { class: 'none', text: 'Toca un servicio o un extra para añadirlo.' }));
+    st.lines.forEach(function (l, i) { ticketBox.appendChild(el('div', { class: 'cLine' }, [el('div', {}, [l.name, l.detail ? el('small', { text: l.detail }) : null]), el('span', { class: 'p', text: money(l.amount) }), el('button', { type: 'button', title: 'Quitar', text: '×', on: { click: function () { st.lines.splice(i, 1); if (!st.lines.length) st.from = ''; drawTicket(); modesBadge(); } } })])); });
+    if (calcData && calcData.discounts.length && n) {
+      var pick = function (i) { return function () { st.disc = i; drawTicket(); modesBadge(); }; };
+      ticketBox.appendChild(el('div', { class: 'cDisc', id: 'descuento' }, [el('span', {}, ['Descuento', t.discount ? el('b', { text: '−' + money(t.discount) }) : null]),
+        el('div', {}, [el('button', { type: 'button', class: st.disc < 0 || !calcData.discounts[st.disc] ? 'on' : '', 'data-disc': '-1', text: 'Sin descuento', on: { click: pick(-1) } })].concat(calcData.discounts.map(function (d, i) { return el('button', { type: 'button', class: i === st.disc ? 'on' : '', 'data-disc': String(i), text: txt(d.n, 60) + ' · ' + (+d.pct || 0) + '%', on: { click: pick(i) } }); })))]));
     }
-    totalBox.appendChild(el('span', { text: 'Total' + (st.lines.length ? ' · ' + (st.lines.length === 1 ? '1 concepto' : st.lines.length + ' conceptos') : '') })); totalBox.appendChild(el('b', { text: money(t.total) }));
+    totalBox.appendChild(el('span', {}, ['Total', n ? el('i', { text: String(n) }) : el('small', { text: 'toca un servicio o un extra' }), n ? svg(CHEV) : null])); totalBox.appendChild(el('b', { text: money(t.total) }));
     totalBox.className = 'cTotal' + (flash ? ' flash' : ''); if (flash) { var tb = totalBox; setTimeout(function () { tb.className = 'cTotal'; }, 350); }
   }
+  // Un control de «menos / más» (nº de uñas, de colores, € por uña…).
+  function stepper(id, label, o) {
+    var out = el('output', { id: id }), less = el('button', { type: 'button', 'aria-label': 'Menos', text: '−' }), more = el('button', { type: 'button', 'aria-label': 'Más', text: '+' });
+    var draw = function () { out.textContent = o.fmt ? o.fmt(o.get()) : String(o.get()); if (o.get() <= o.min) less.setAttribute('disabled', ''); else less.removeAttribute('disabled'); if (o.get() >= o.max) more.setAttribute('disabled', ''); else more.removeAttribute('disabled'); };
+    var move = function (k) { return function () { o.set(Math.min(o.max, Math.max(o.min, r2(o.get() + k * o.step)))); draw(); o.change(); }; };
+    less.addEventListener('click', move(-1)); more.addEventListener('click', move(1)); draw();
+    return el('div', { class: 'stp' }, [el('span', { text: label }), el('div', {}, [less, out, more])]);
+  }
+  // La ficha de un extra: su foto en grande, su criterio, lo justo que hay que decir y cuánto es.
+  function addonSheet(a, calc) {
+    var foto = fotoOf(calc, a), fixed = a.mode === 'fixed', open = a.mode === 'open', steps = a.mode === 'steps';
+    var range = a.mode === 'perNail' && (a.max == null || a.max === '' || +a.min !== +a.max);
+    var cMin = steps ? (+a.base > 0 ? +a.inc || 0 : 0) : 1, cMax = steps ? 30 : 10, cnt = steps ? +a.inc || 0 : Math.min(cMax, (+a.inc || 0) + 1);
+    var uMin = +a.min || 0, uMax = a.max == null || a.max === '' ? Math.max(99, uMin) : Math.max(uMin, +a.max), uni = uMin;
+    var amt = open ? el('input', { type: 'number', inputmode: 'decimal', min: '0', step: '0.5', placeholder: '0,00', id: 'xImporte', 'aria-label': 'Importe' }) : null;
+    var res = el('div', { class: 'xRes', id: 'xRes' }), addBtn = el('button', { class: 'calcBtn', id: 'xAdd', type: 'button' });
+    var price = function () { return addonPrice(a, cnt, open ? amt.value : uni); };
+    var sync = function () { var pr = price(); res.className = 'xRes'; res.textContent = fixed || open ? '' : pr.detail + ' → ' + money(pr.amount); addBtn.textContent = 'Añadir · ' + (pr.amount > 0 || !fixed ? money(pr.amount) : 'sin coste'); };
+    var unitName = steps ? (function (t) { return t.charAt(0).toUpperCase() + t.slice(1); })(txt(a.us, 30) || 'unidades') : 'Uñas';
+    var kids = [foto ? el('img', { class: 'xFoto', id: 'xFoto', alt: '', src: foto }) : null, el('h2', { text: txt(a.n, 80) }), el('div', { class: 'xPrecio', text: addonText(a) }), a.help ? el('p', { class: 'xAyuda', text: txt(a.help, 200) }) : null,
+      fixed || open ? null : stepper('xNum', unitName, { get: function () { return cnt; }, set: function (v) { cnt = v; }, min: cMin, max: cMax, step: 1, change: sync }),
+      range ? stepper('xUni', '€ por uña', { get: function () { return uni; }, set: function (v) { uni = v; }, min: uMin, max: uMax, step: 0.5, fmt: money, change: sync }) : null,
+      open ? el('div', { class: 'stp' }, [el('span', { text: 'Importe (€)' }), amt]) : null, res];
+    if (amt) amt.addEventListener('input', sync);
+    sheet(kids, function (close) {
+      addBtn.addEventListener('click', function () {
+        var pr = price();
+        if (!fixed && !(pr.amount > 0)) { res.className = 'xRes no'; res.textContent = open ? 'Escribe el importe (el precio de su caja).' : 'Eso está incluido en el servicio: no hay suplemento que cobrar.'; return; }
+        addLine({ kind: 'addon', name: a.n, detail: fixed || pr.detail === txt(a.g, 60) ? a.g : (a.g === a.n ? '' : txt(a.g, 60) + ' · ') + pr.detail, amount: fixed ? +a.min || 0 : pr.amount }); close();
+      });
+      return addBtn;
+    });
+    sync(); if (amt) setTimeout(function () { try { amt.focus(); } catch (e) { } }, 60);
+  }
   function calcPane(c) {
-    var d = c && c.data, calc = calcOf(d), where = d ? txt(d.center.l || d.center.n, 80) : '';
-    var json = JSON.stringify(d ? d.calc || null : null), key = (c ? c.key : '') + '|' + json + '|' + st.cTab;
+    var d = c && c.data, calc = calcOf(d);
+    var json = JSON.stringify(d ? d.calc || null : null), key = (c ? c.key : '') + '|' + json + '|' + st.cTab + '|' + st.fRev;
     if (st.cNode && st.cKey === key) { calcData = calc; drawTicket(); return st.cNode; } // (misma lista de precios: no se rehace lo que se estaba escribiendo)
-    if (st.cKey.split('|')[0] !== (c ? c.key : '')) { st.lines = []; st.disc = -1; st.from = ''; st.cCat = ''; st.cOpen = {}; } // otro centro: otros precios
+    if (st.cKey.split('|')[0] !== (c ? c.key : '')) { st.lines = []; st.disc = -1; st.from = ''; st.cCat = ''; st.xGrp = ''; st.tk = false; } // otro centro: otros precios
     else if (st.cJson !== json) st.disc = -1; // han cambiado los precios del centro: el descuento se vuelve a elegir
     st.cJson = json;
-    var pane = el('aside', { class: 'calc', id: 'calculadora' }, [el('div', { class: 'cHead' }, [el('b', { text: 'Calculadora' }), el('small', { text: calc ? 'Precios de ' + where + ' · calcula, no cobra (el cobro se hace en el programa)' : where })])]);
-    calcData = calc; ticketBox = el('div', { class: 'cTicket', id: 'cuenta' }); totalBox = el('div', { class: 'cTotal', id: 'total', title: 'Ver la cuenta', on: { click: function () { try { if (window.innerWidth < 1040) window.scrollTo(0, 0); else ticketBox.scrollIntoView({ block: 'nearest' }); } catch (e) { } } } });
+    var pane = el('aside', { class: 'calc' + (st.tk && st.lines.length ? ' tk' : ''), id: 'calculadora', 'aria-label': 'Calculadora' });
+    calcData = calc; ticketBox = el('div', { class: 'cTicket', id: 'cuenta' });
+    totalBox = el('button', { class: 'cTotal', id: 'total', type: 'button', title: 'Ver la cuenta', on: { click: function () { if (st.lines.length) setTk(!st.tk); } } });
     st.cNode = pane; st.cKey = key;
-    if (!calc) { pane.appendChild(el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: d ? 'Este centro todavía no publica su lista de precios. Se activa en el programa (versión 1.10 o posterior): Ajustes → Agenda en el móvil → «Calculadora en la misma página».' : 'Abre primero la agenda de un centro.' })])); ticketBox = totalBox = null; return pane; }
-    var tab = function (id, label) { return el('button', { class: st.cTab === id ? 'on' : '', 'data-tab': id, text: label, on: { click: function () { st.cTab = id; render(); } } }); };
+    if (!calc) { pane.appendChild(el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: d ? 'Este centro todavía no publica su lista de precios. Se activa en el programa: Ajustes → Agenda en el móvil → «Calculadora en la misma página».' : 'Abre primero la agenda de un centro.' })])); ticketBox = totalBox = null; return pane; }
+    var tab = function (id, label) { return el('button', { type: 'button', class: st.cTab === id ? 'on' : '', 'data-tab': id, text: label, on: { click: function () { st.cTab = id; render(); } } }); };
     pane.appendChild(el('div', { class: 'cTabs' }, [tab('serv', 'Servicios'), tab('extras', 'Extras'), calc.bonos.length ? tab('bonos', 'Bonos') : null]));
     var body = el('div', { class: 'cBody' }); pane.appendChild(body);
+    var plain = function (t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); };
     if (st.cTab === 'bonos' && calc.bonos.length) {
+      var bl = el('div', { class: 'cList', id: 'bonos' });
       calc.bonos.forEach(function (b) { var sv = (Array.isArray(b.sv) ? b.sv : []).map(function (i) { return calc.services[i] && txt(calc.services[i].n, 80); }).filter(Boolean), svTxt = sv.length ? sv.slice(0, 4).join(', ') + (sv.length > 4 ? '…' : '') : b.gone ? 'servicios que ya no existen' : 'cualquier servicio';
-        body.appendChild(el('button', { class: 'cItem', on: { click: function () { addLine({ kind: 'bono', name: b.n, detail: nUn(+b.s || 1, 'sesión', 'sesiones'), amount: b.p }); } } }, [el('b', {}, [txt(b.n, 80), el('small', { text: nUn(+b.s || 1, 'sesión', 'sesiones') + (+b.v ? ' · caduca a los ' + nUn(+b.v, 'mes', 'meses') : '') + ' · ' + svTxt })]), el('span', { class: 'p', text: money(b.p) })])); });
+        bl.appendChild(el('button', { class: 'cItem', type: 'button', on: { click: function () { addLine({ kind: 'bono', name: b.n, detail: nUn(+b.s || 1, 'sesión', 'sesiones'), amount: b.p }); } } }, [el('b', {}, [txt(b.n, 80), el('small', { text: nUn(+b.s || 1, 'sesión', 'sesiones') + (+b.v ? ' · caduca a los ' + nUn(+b.v, 'mes', 'meses') : '') + ' · ' + svTxt })]), el('span', { class: 'p', text: money(b.p) })])); });
+      body.appendChild(bl);
     } else if (st.cTab === 'extras') {
+      // Los grupos, arriba (se elige uno); debajo, sus extras: con foto, en baldosas; sin foto, en lista. Al tocar
+      // uno sube su ficha. Sin desplegables.
       var groups = []; calc.addons.forEach(function (a) { var g = groups.filter(function (x) { return x.name === a.g; })[0]; if (!g) groups.push(g = { name: a.g, list: [] }); g.list.push(a); });
       if (!groups.length) body.appendChild(el('div', { class: 'none', text: 'Este centro no tiene extras de uñas.' }));
-      else body.appendChild(el('div', { class: 'cHint', style: 'margin:0 0 8px', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
-      groups.forEach(function (g) {
-        var fixed = g.list.filter(function (a) { return a.mode === 'fixed'; }), rest = g.list.filter(function (a) { return a.mode !== 'fixed'; });
-        var box = el('div', { class: 'cGrp' + (st.cOpen[g.name] ? ' open' : ''), 'data-grp': txt(g.name, 60) });
-        box.appendChild(el('button', { on: { click: function () { st.cOpen[g.name] = !st.cOpen[g.name]; box.className = 'cGrp' + (st.cOpen[g.name] ? ' open' : ''); } } }, [txt(g.name, 60), el('small', { text: g.list.length === 1 ? addonText(g.list[0]) : g.list.length + ' opciones' })]));
-        var inn = el('div', { class: 'in' }); box.appendChild(inn);
-        if (fixed.length) inn.appendChild(el('div', { class: 'cChips' }, fixed.map(function (a) { return el('button', { class: 'cChip', text: txt(a.n, 80) + ' · ' + (+a.min ? '+' + money(a.min) : 'sin coste'), on: { click: function () { addLine({ kind: 'addon', name: a.n, detail: a.g, amount: +a.min || 0 }); } } }); })));
-        if (rest.length) {
-          var sel = el('select', {}, rest.map(function (a, i) { return el('option', { value: String(i), text: txt(a.n, 80) + ' · ' + addonText(a) }); }));
-          var cnt = el('input', { type: 'number', inputmode: 'numeric', min: '0', max: '99', step: '1', value: '1' }), uni = el('input', { type: 'number', inputmode: 'decimal', min: '0', step: '0.5' });
-          var lc = el('span', { text: 'Nº uñas' }), lu = el('span', { text: '€ / uña' }), fc = el('label', {}, [lc, cnt]), fu = el('label', {}, [lu, uni]), hint = el('div', { class: 'cHint' }), last = -1;
-          var cur = function () { return rest[+sel.value] || rest[0]; };
-          var sync = function () {
-            var a = cur();
-            if (last !== +sel.value) { last = +sel.value; // al cambiar de tipo: valores de partida
-              cnt.value = a.mode === 'steps' ? +a.inc || 0 : (+a.inc || 0) + 1; cnt.max = a.mode === 'steps' ? 30 : 10; cnt.min = a.mode === 'steps' ? (+a.base > 0 ? +a.inc || 0 : 0) : 1;
-              uni.value = a.mode === 'open' ? '' : a.min; lc.textContent = a.mode === 'steps' ? (function (t) { return t.charAt(0).toUpperCase() + t.slice(1); })(txt(a.us, 30) || 'unidades') : 'Nº uñas'; lu.textContent = a.mode === 'open' ? 'Importe €' : '€ / uña'; }
-            fc.style.display = a.mode === 'open' ? 'none' : ''; fu.style.display = a.mode === 'open' || (a.mode === 'perNail' && (a.max == null || a.max === '' || +a.min !== +a.max)) ? '' : 'none';
-            var pr = addonPrice(a, cnt.value, uni.value); hint.innerHTML = ''; if (a.help) hint.appendChild(document.createTextNode(txt(a.help, 200))); hint.appendChild(el('b', { text: (a.mode === 'open' ? 'Importe' : pr.detail) + ' → ' + money(pr.amount) }));
-          };
-          [sel, cnt, uni].forEach(function (x) { x.addEventListener('input', sync); x.addEventListener('change', sync); });
-          inn.appendChild(el('div', { class: 'cRow' }, [el('label', { class: 'g' }, [el('span', { text: 'Tipo' }), sel]), fc, fu, el('button', { class: 'add', text: 'Añadir', on: { click: function () {
-            var a = cur(), pr = addonPrice(a, cnt.value, uni.value);
-            if (!(pr.amount > 0)) { hint.innerHTML = ''; hint.appendChild(el('b', { text: a.mode === 'open' ? 'Escribe el importe (el precio de su caja).' : 'Eso está incluido en el servicio: no hay suplemento que cobrar.' })); return; }
-            addLine({ kind: 'addon', name: a.n, detail: pr.detail === txt(a.g, 60) ? a.g : (a.g === a.n ? '' : txt(a.g, 60) + ' · ') + pr.detail, amount: pr.amount });
-          } } })]));
-          inn.appendChild(hint); sync();
-        }
-        body.appendChild(box);
-      });
+      else {
+        if (!groups.some(function (g) { return g.name === st.xGrp; })) st.xGrp = groups[0].name;
+        var xq = el('input', { class: 'cSearch', id: 'buscarExtra', type: 'search', placeholder: 'Buscar un extra…', autocomplete: 'off' }), xl = el('div', { id: 'extras' }), wait = fotosWait(calc);
+        var xbar = el('div', { class: 'cCats', id: 'grupos' }, groups.map(function (g) { return el('button', { type: 'button', class: g.name === st.xGrp ? 'on' : '', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); } } }, [txt(g.name, 60), g.list.some(function (a) { return a.ph; }) ? el('i', { title: 'Con fotos' }) : null]); }));
+        var fillX = function () {
+          var k = plain(xq.value).trim(); xl.innerHTML = ''; Array.prototype.forEach.call(xbar.children, function (b, i) { b.className = !k && groups[i].name === st.xGrp ? 'on' : ''; });
+          var shown = k ? calc.addons.filter(function (a) { return plain(a.n + ' ' + a.g).indexOf(k) >= 0; }) : groups.filter(function (g) { return g.name === st.xGrp; })[0].list;
+          if (!shown.length) { xl.appendChild(el('div', { class: 'none', text: 'Ningún extra con ese nombre.' })); return; }
+          var go = function (a) { return function () { addonSheet(a, calc); }; };
+          if (shown.some(function (a) { return fotoOf(calc, a) || (wait && a.ph); })) {
+            xl.appendChild(el('div', { class: 'xGrid' }, shown.slice(0, 80).map(function (a) { var u = fotoOf(calc, a);
+              return el('button', { class: 'xCard', type: 'button', 'data-x': txt(a.n, 80), on: { click: go(a) } }, [u ? el('span', { class: 'ph' }, [el('img', { alt: '', src: u })]) : el('span', { class: 'ph no', text: wait && a.ph ? '…' : txt(a.n, 1).toUpperCase() }), el('span', { class: 'tx' }, [el('b', { text: txt(a.n, 80) }), el('small', { text: addonText(a) })])]); })));
+          } else {
+            xl.appendChild(el('div', { class: 'cList' }, shown.slice(0, 80).map(function (a) { return el('button', { class: 'cItem', type: 'button', 'data-x': txt(a.n, 80), on: { click: go(a) } }, [el('b', {}, [txt(a.n, 80), k ? el('small', { text: txt(a.g, 60) }) : null]), el('span', { class: 'p x', text: addonText(a) })]); })));
+          }
+          if (!k) xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
+        };
+        xq.addEventListener('input', fillX);
+        body.appendChild(xq); if (groups.length > 1) body.appendChild(xbar); body.appendChild(xl); fillX();
+      }
     } else {
       var cats = []; calc.services.forEach(function (x) { if (cats.indexOf(x.c) < 0) cats.push(x.c); });
       if (cats.indexOf(st.cCat) < 0) st.cCat = cats[0] || '';
       var list = el('div', { id: 'servicios' }), q = el('input', { class: 'cSearch', type: 'search', placeholder: 'Buscar un servicio…', autocomplete: 'off' });
-      var bar = el('div', { class: 'cCats' }, cats.map(function (c0) { return el('button', { class: c0 === st.cCat ? 'on' : '', text: txt(c0, 60), on: { click: function () { st.cCat = c0; q.value = ''; fill(); } } }); }));
-      var plain = function (t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); };
+      var bar = el('div', { class: 'cCats' }, cats.map(function (c0) { return el('button', { type: 'button', class: c0 === st.cCat ? 'on' : '', text: txt(c0, 60), on: { click: function () { st.cCat = c0; q.value = ''; fill(); } } }); }));
       var fill = function () {
         var k = plain(q.value).trim(); list.innerHTML = ''; Array.prototype.forEach.call(bar.children, function (b, i) { b.className = !k && cats[i] === st.cCat ? 'on' : ''; });
         var shown = calc.services.filter(function (x) { return k ? plain(x.n + ' ' + x.c).indexOf(k) >= 0 : x.c === st.cCat; });
-        if (!shown.length) list.appendChild(el('div', { class: 'none', text: k ? 'Ningún servicio con ese nombre.' : 'No hay servicios.' }));
-        shown.slice(0, 80).forEach(function (x) { list.appendChild(el('button', { class: 'cItem', on: { click: function () { addLine({ kind: 'service', name: x.n, detail: x.c, amount: x.p }); } } }, [el('b', {}, [txt(x.n, 80), el('small', { text: (k ? txt(x.c, 60) + (x.m ? ' · ' : '') : '') + (x.m ? x.m + ' min' : '') })]), el('span', { class: 'p', text: money(x.p) })])); });
+        if (!shown.length) { list.appendChild(el('div', { class: 'none', text: k ? 'Ningún servicio con ese nombre.' : 'No hay servicios.' })); return; }
+        list.appendChild(el('div', { class: 'cList' }, shown.slice(0, 80).map(function (x) { return el('button', { class: 'cItem', type: 'button', on: { click: function () { addLine({ kind: 'service', name: x.n, detail: x.c, amount: x.p }); } } }, [el('b', {}, [txt(x.n, 80), el('small', { text: (k ? txt(x.c, 60) + (x.m ? ' · ' : '') : '') + (x.m ? x.m + ' min' : '') })]), el('span', { class: 'p', text: money(x.p) })]); })));
       };
       q.addEventListener('input', fill);
       body.appendChild(q); if (cats.length > 1) body.appendChild(bar); body.appendChild(list); fill();
     }
-    pane.appendChild(ticketBox); pane.appendChild(totalBox); drawTicket();
+    pane.appendChild(el('div', { class: 'tkBack', on: { click: function () { setTk(false); } } })); pane.appendChild(ticketBox); pane.appendChild(totalBox); drawTicket();
     return pane;
   }
   /* ---------- que ningún aparato se quede con una página antigua ---------- */
@@ -485,7 +570,7 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     var k; try { k = kdfOf(file); } catch (e) { return null; }
     if (st.keys[k.id]) { try { return await decryptWith(file, st.keys[k.id]); } catch (e) { } }
     for (var i = 0; i < st.pws.length; i++) {
-      try { var key = await deriveKey(st.pws[i], k); var data = await decryptWith(file, key); st.keys[k.id] = key; saveKey(k.id, key); return data; } catch (e) { }
+      try { var key = await deriveKey(st.pws[i], k); var data = await decryptWith(file, key); st.keys[k.id] = key; return data; } catch (e) { }
     }
     return null;
   }
@@ -494,21 +579,19 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
   // Agendas publicadas: una zona —rama— por centro, con su identificador («parla-este»; la 1.10 escribía «Parla-Este»
   // y hasta la 1.9 era «agenda-…»). No hay lista fija de centros: son las ramas que haya. La lista se pide a la API de
   // GitHub (al momento), de 100 en 100. Si GitHub
-  // limita las consultas (muchas seguidas desde la misma conexión), se leen las ramas ya conocidas de
+  // limita las consultas (muchas seguidas desde la misma conexión), se leen las ramas ya vistas en esta visita de
   // raw.githubusercontent.com, que puede ir unos minutos por detrás.
   function okBranch(b) { return BR_RE.test(String(b)) && !MAIN_RE.test(String(b)); }
-  function knownBranches() { try { return JSON.parse(localStorage.getItem(LS_BR) || '[]').filter(okBranch); } catch (e) { return []; } }
   async function listing() {
     try {
       var refs = [];
       for (var pg = 1; pg <= 5; pg++) { var part = await getJson(cfg.api + '/repos/' + cfg.repo + '/branches?per_page=100&page=' + pg); if (!Array.isArray(part)) break; refs = refs.concat(part); if (part.length < 100) break; }
       var items = refs.map(function (r) { return { key: String(r.name), sha: r.commit && r.commit.sha }; }).filter(function (x) { return okBranch(x.key) && SHA_RE.test(x.sha || ''); });
       st.branches = items.map(function (x) { return x.key; });
-      if (st.remember) { try { localStorage.setItem(LS_BR, JSON.stringify(st.branches)); } catch (e) { } }
       return { items: items.map(function (x) { return { key: x.key, sha: x.sha, url: cfg.raw + '/' + cfg.repo + '/' + x.sha + '/agenda.json' }; }) };
     } catch (e) {
       if (!(e.status === 403 || e.status === 429)) throw e;
-      var names = st.branches.length ? st.branches : knownBranches();
+      var names = st.branches;
       if (!names.length) { var err = new Error('limite'); err.limit = true; throw err; }
       return { cached: true, items: names.map(function (b) { return { key: b, sha: null, url: cfg.raw + '/' + cfg.repo + '/' + b + '/agenda.json' }; }) };
     }
@@ -543,16 +626,15 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     st.loading = false; st.ready = true; render();
   }
 
-  async function login(pw, remember) {
+  async function login(pw) {
     pw = String(pw || ''); if (!pw) return;
     st.bad = '';
-    if (remember) st.remember = true;
     if (st.pws.indexOf(pw) < 0) st.pws.push(pw);
     await refresh();
     if (st.centers.length && !st.centers.some(function (c) { return c.data; })) { st.pws = st.pws.filter(function (x) { return x !== pw; }); st.bad = 'Contraseña incorrecta.'; render(); }
   }
-  async function logout() { st.pws = []; st.keys = {}; st.remember = false; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.cOpen = {}; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; try { localStorage.removeItem(LS_BR); localStorage.removeItem(LS_VW); } catch (e) { } await clearKeys(); render(); }
-  function setView(v) { st.view = v; st.scroll = null; if (st.remember) { try { localStorage.setItem(LS_VW, v); } catch (e) { } } render(); }
+  function logout() { st.pws = []; st.keys = {}; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.xGrp = ''; st.tk = false; st.fotos = {}; st.fRev++; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; st.view = 'cols'; var sh = document.querySelector('.sheetBack'); if (sh) sh.remove(); forget(); render(); }
+  function setView(v) { st.view = v; st.scroll = null; render(); }
 
   function render() {
     // (si al actualizar se estaba escribiendo en la calculadora, se sigue donde se estaba: se mira antes de vaciar la pantalla)
@@ -561,17 +643,19 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     var m0 = document.querySelector('.modes'); if (m0) m0.remove(); document.body.className = ''; // (la barra de abajo solo va con la agenda abierta)
     var opened = st.centers.filter(function (c) { return c.data; });
     var creds = st.pws.length || Object.keys(st.keys).length;
-    if (creds && !st.ready) { app.appendChild(el('div', { class: 'login' }, [el('h1', { text: 'Consentía Studio' }), el('p', { text: 'Abriendo…' })])); return; }
+    // La entrada: solo el nombre y la contraseña.
+    var brand = function () { return el('h1', { text: 'Consentía Studio' }); }, logo = function () { return el('img', { class: 'logo', id: 'logo', alt: '', src: LOGO }); };
+    var locked = !st.ready || !creds || (!opened.length && st.centers.length && !st.loading);
+    document.documentElement.className = locked ? 'lock' : ''; // (la entrada no se desplaza; la agenda, sí)
+    if (creds && !st.ready) { app.appendChild(el('div', { class: 'login' }, [brand(), el('p', { text: 'Abriendo…' }), logo()])); return; }
     if (!creds || (!opened.length && st.centers.length && !st.loading)) {
-      var inp = el('input', { type: 'password', autocomplete: 'current-password', placeholder: 'Contraseña de la agenda', id: 'pw' });
-      var rem = el('input', { type: 'checkbox', id: 'rem' });
-      var btn = el('button', { text: st.loading ? 'Abriendo…' : 'Entrar' });
+      var inp = el('input', { type: 'password', autocomplete: 'current-password', placeholder: 'Introducir contraseña', 'aria-label': 'Introducir contraseña', id: 'pw' });
+      var btn = el('button', { id: 'entrar', text: st.loading ? 'Abriendo…' : 'Entrar' });
       if (st.loading) btn.setAttribute('disabled', '');
-      var go = function () { login(inp.value, rem.checked); };
+      var go = function () { login(inp.value); };
       btn.addEventListener('click', go); inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') go(); });
-      app.appendChild(el('div', { class: 'login' }, [el('h1', { text: 'Consentía Studio' }), el('p', { text: 'Agenda y calculadora de los centros. Escribe la contraseña de la agenda: todo se descifra aquí, en este aparato, y no se envía a ningún sitio.' }), inp,
-        el('label', {}, [rem, 'Recordar en este aparato (quien lo use verá la agenda)']), btn, st.bad ? el('div', { class: 'bad', text: st.bad }) : null, st.msg ? el('div', { class: 'warn', text: st.msg }) : null,
-        st.fresh && !creds ? el('div', { class: 'warn', id: 'nueva', text: 'La página se ha actualizado (versión ' + st.fresh + '). Escribe la contraseña otra vez.' }) : null]));
+      app.appendChild(el('div', { class: 'login' }, [brand(), inp, btn, st.bad ? el('div', { class: 'bad', text: st.bad }) : null, st.msg ? el('div', { class: 'warn', text: st.msg }) : null,
+        st.fresh && !creds ? el('div', { class: 'warn', id: 'nueva', text: 'La página se ha actualizado (versión ' + st.fresh + '). Escribe la contraseña otra vez.' }) : null, logo()]));
       setTimeout(function () { inp.focus(); }, 50);
       return;
     }
@@ -582,6 +666,7 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     app.appendChild(head);
     // Agenda (izquierda) y calculadora (derecha). En el móvil se ve una u otra: se cambia con la barra de abajo.
     var pane; try { pane = calcPane(c); } catch (e) { st.cNode = null; st.cKey = ''; ticketBox = totalBox = null; pane = el('aside', { class: 'calc', id: 'calculadora' }, [el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: 'No se ha podido abrir la lista de precios de este centro.' })])]); } // la calculadora nunca deja sin agenda
+    if (st.cTab === 'extras' && (st.mode === 'calc' || window.innerWidth >= 1040)) loadFotos(c); // las fotos de los extras, cuando se van a ver
     var root = app, pA = el('div', { class: 'pA' }), pC = el('div', { class: 'pC' }, [pane]);
     root.appendChild(el('div', { class: 'split m-' + st.mode }, [pA, pC]));
     var oldM = document.querySelector('.modes'); if (oldM) oldM.remove();
@@ -606,7 +691,7 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     if (!c) { main.appendChild(el('div', { class: 'none', text: st.loading ? 'Cargando…' : 'No hay agendas publicadas.' })); app.appendChild(main); return; }
     if (!c.data) {
       var oi = el('input', { type: 'password', placeholder: 'Contraseña de este centro' });
-      main.appendChild(el('div', { class: 'warn' }, ['Esta agenda tiene otra contraseña (o se ha cambiado).', el('div', { class: 'other' }, [oi, el('button', { text: 'Abrir', on: { click: function () { login(oi.value, st.remember); } } })])]));
+      main.appendChild(el('div', { class: 'warn' }, ['Esta agenda tiene otra contraseña (o se ha cambiado).', el('div', { class: 'other' }, [oi, el('button', { text: 'Abrir', on: { click: function () { login(oi.value); } } })])]));
       app.appendChild(main); return;
     }
     var d = c.data, day = st.day;
@@ -696,11 +781,7 @@ body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
     }
   }
 
-  render();
-  loadKeys().then(function (k) {
-    st.keys = k || {}; st.remember = Object.keys(st.keys).length > 0;
-    if (st.remember) refresh(); else { st.ready = true; render(); }
-  });
+  forget(); st.ready = true; render();
   setInterval(function () { if ((st.pws.length || Object.keys(st.keys).length) && !document.hidden) refresh(); }, 5 * 60 * 1000);
   window.addEventListener('resize', fitGrid);
   window.addEventListener('hashchange', function () { var w = wanted(); if (!w) return; var i = st.centers.findIndex(function (c) { return centerSlug(c) === w; }); if (i >= 0) { if (i !== st.cur) { st.cur = i; st.scroll = null; render(); } } else st.want = w; });
