@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="1.10.0">
-<meta name="consentia-agenda-firma" content="9UvJBWGegGiOkoet9rMXwONdQHm9dgx1uK55HHX5VPtwK8jQEUxoBjDE50DGfhbL4zdRj27PZrAjSDCUnXCmAw==">
+<meta name="consentia-agenda-version" content="2.0.1">
+<meta name="consentia-agenda-firma" content="PIILyzyED6hnqN98omZcuANt8u1DEDA1KCLLsCgOK37yJ+mqTuT+kqKnx9rUPklb9MCVjAsiJdwZP8LGvszpAQ==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-iSS1rvKvmq1DH+y1pE38aOlvBsMXtvkMZTLsYFgvv5Q='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-PPKhov0Onn/ResiGQD7luct1iM1pU9GOM0mzF8WVveE='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
@@ -57,6 +57,11 @@ main{padding:10px 12px 40px;max-width:720px;margin:0 auto}
 .status span{flex:1;min-width:0}
 .status button{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:4px;padding:5px 9px;font:inherit;font-size:12px;font-weight:700}
 .status button.lnk,.warn button.lnk{border:0;background:none;padding:0;text-decoration:underline;font-weight:700;font:inherit;font-weight:700;color:inherit}
+/* «Hay una versión más nueva de esta página»: barra dentro de la cabecera (siempre a la vista), con su botón. */
+.upd{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;background:#fff4d6;color:#5c3d00;border-top:1px solid #ecd18c;padding:9px 12px;font-size:13.5px;font-weight:700;line-height:1.35}
+.upd span{flex:1 1 200px;min-width:0}
+.upd small{flex:1 1 100%;font-weight:400;font-size:12px}
+.upd button{flex:none;background:var(--ink);color:#fff;border:0;border-radius:6px;padding:9px 16px;font:inherit;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 /* Vista en columnas, como la agenda del programa: una columna por trabajadora y las horas hacia abajo. */
 main.wide{max-width:none;padding:0}
 main.wide .warn,main.wide .bad{margin:8px 12px}
@@ -98,11 +103,28 @@ main.wide .status{margin:6px 12px}
 /* Agenda y calculadora en la misma pantalla: en el ordenador, una al lado de la otra; en el móvil, dos pestañas abajo. */
 .split{display:block}
 .split.m-calc .pA,.split.m-agenda .pC{display:none}
-.modes{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;background:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
-.modes button{flex:1;height:46px;background:transparent;color:#bbb;border:0;border-top:3px solid transparent;padding:0 6px;font:inherit;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.modes button.on{color:#fff;border-top-color:var(--pink)}
-.modes small{font-weight:700;letter-spacing:0;text-transform:none;color:var(--pink);margin-left:6px}
-body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+/* La barra de abajo, como el «control segmentado» de un iPhone: dos botones dentro de una pista redondeada, el
+   elegido en blanco y con su icono en rosa, sobre una barra translúcida. --mh es lo que mide la barra (sin el margen
+   de seguridad del móvil): lo usan también el hueco que se deja debajo del contenido y el total de la calculadora. */
+:root{--mh:67px}
+.modes{position:fixed;left:0;right:0;bottom:0;z-index:9;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#f7f6f3;border-top:1px solid rgba(17,17,19,.12)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.modes{background:rgba(247,246,243,.8);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px)}}
+.modes .seg{display:flex;gap:2px;max-width:520px;margin:0 auto;padding:3px;border-radius:14px;background:rgba(118,118,128,.16)}
+.modes button{position:relative;flex:1 1 0;min-width:0;height:44px;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 8px;border:0;border-radius:11px;background:transparent;color:#5b5b61;font:inherit;font-size:15px;font-weight:600;letter-spacing:-.01em;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .12s ease-out,color .15s}
+.modes button svg{flex:none;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.modes button svg .f{fill:currentColor;stroke:none}
+.modes button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modes button.on{background:#fff;color:var(--ink);box-shadow:0 3px 8px rgba(17,17,19,.12),0 1px 1px rgba(17,17,19,.08)}
+.modes button.on.go{animation:segOn .18s ease-out}
+.modes button.on svg{color:var(--pink)}
+.modes button:active{transform:scale(.97)}
+.modes button:focus-visible{outline:2px solid var(--pink);outline-offset:1px}
+/* Lo que lleva sumada la cuenta: una insignia en la esquina del botón (no le quita sitio al nombre). */
+.modes small{position:absolute;top:-8px;right:-3px;font:700 12px/1 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap;color:#fff;background:var(--pink);border-radius:999px;padding:4px 8px;box-shadow:0 0 0 2px #f7f6f3}
+.modes small:empty{display:none}
+@keyframes segOn{from{transform:scale(.96);box-shadow:none}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.modes button,.modes button.on.go{animation:none;transition:none}}
+body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--mh) + 18px + env(safe-area-inset-bottom))}
 .pC{background:#fff}
 .calc{display:flex;flex-direction:column;min-height:60vh}
 .cHead{padding:12px 14px 8px;border-bottom:1px solid var(--line)}
@@ -147,7 +169,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(64px +
 .cDisc{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px}
 .cDisc select{flex:1;font:inherit;padding:7px;border:1px solid #bdb9b1;border-radius:6px;background:#fff;min-width:0}
 .cTotal{position:sticky;bottom:0;background:var(--ink);color:#fff;display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 14px;margin-top:auto}
-body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
+body.has-modes .cTotal{bottom:calc(var(--mh) + env(safe-area-inset-bottom))}
 .cTotal span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#ccc}
 .cTotal b{font:800 22px ui-monospace,Consolas,monospace}
 .cTotal.flash{background:var(--pink)}
@@ -172,9 +194,9 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
 <script>
 (function () {
   'use strict';
-  var FORMAT = 'consentia-agenda-1', MIN_ITER = 100000, MAX_ITER = 5000000, BR_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,59}$/, MAIN_RE = /^(main|master|gh-pages|head)$/i, OLD_RE = /^agenda-[0-9a-f]{16,64}$/, SHA_RE = /^[0-9a-f]{40,64}$/, LS_BR = 'consentia-agenda-ramas', LS_VW = 'consentia-agenda-vista';
+  var FORMAT = 'consentia-agenda-1', MIN_ITER = 100000, MAX_ITER = 5000000, BR_RE = /^[A-Za-z0-9][A-Za-z0-9-]{0,59}$/, MAIN_RE = /^(main|master|gh-pages|head)$/i, OLD_RE = /^agenda-[0-9a-f]{16,64}$/, ZONE_RE = /^[a-z0-9][a-z0-9-]{0,59}$/, SHA_RE = /^[0-9a-f]{40,64}$/, LS_BR = 'consentia-agenda-ramas', LS_VW = 'consentia-agenda-vista';
   var PX = 1.2, COL_W = 112, TIME_W = 42; // píxeles por minuto, ancho mínimo de cada columna y de la columna de las horas
-  var PAGE_V = (document.querySelector('meta[name="consentia-agenda-version"]') || {}).content || '', SS_RL = 'consentia-agenda-recarga';
+  var PAGE_V = (document.querySelector('meta[name="consentia-agenda-version"]') || {}).content || '', SS_RL = 'consentia-agenda-recarga', SS_MAN = 'consentia-agenda-recarga-a-mano';
   var app = document.getElementById('app');
   // Repositorio: https://USUARIO.github.io/REPOSITORIO/ (o ?repo=usuario/nombre solo en este ordenador, para pruebas).
   var cfg = (function () {
@@ -213,6 +235,12 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
   function clearKeys() { return idb('readwrite', function (os) { os.clear(); }); }
 
   function el(tag, attrs, kids) { var e = document.createElement(tag); if (attrs) Object.keys(attrs).forEach(function (k) { if (k === 'text') e.textContent = attrs[k]; else if (k === 'on') Object.keys(attrs.on).forEach(function (ev) { e.addEventListener(ev, attrs.on[ev]); }); else if (k === 'style') e.setAttribute('style', attrs[k]); else e.setAttribute(k, attrs[k]); }); (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); }); return e; }
+  // Iconos de la barra de abajo (trazo, 24×24). Cada pieza: [etiqueta, atributos]; la clase «f» va rellena.
+  var ICON = {
+    agenda: [['rect', { x: 3.5, y: 5, width: 17, height: 15.5, rx: 3.5 }], ['path', { d: 'M3.5 10h17M8 3v4M16 3v4' }], ['circle', { class: 'f', cx: 8.2, cy: 14.6, r: 1.15 }], ['circle', { class: 'f', cx: 12, cy: 14.6, r: 1.15 }], ['circle', { class: 'f', cx: 15.8, cy: 14.6, r: 1.15 }]],
+    calc: [['rect', { x: 5, y: 3, width: 14, height: 18, rx: 3.5 }], ['rect', { x: 8, y: 6, width: 8, height: 3.6, rx: 1.2 }], ['circle', { class: 'f', cx: 8.8, cy: 13.2, r: 1.1 }], ['circle', { class: 'f', cx: 12, cy: 13.2, r: 1.1 }], ['circle', { class: 'f', cx: 15.2, cy: 13.2, r: 1.1 }], ['circle', { class: 'f', cx: 8.8, cy: 17, r: 1.1 }], ['circle', { class: 'f', cx: 12, cy: 17, r: 1.1 }], ['circle', { class: 'f', cx: 15.2, cy: 17, r: 1.1 }]]
+  };
+  function svg(parts) { var NS = 'http://www.w3.org/2000/svg', s = document.createElementNS(NS, 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('aria-hidden', 'true'); parts.forEach(function (p) { var n = document.createElementNS(NS, p[0]); Object.keys(p[1]).forEach(function (k) { n.setAttribute(k, p[1][k]); }); s.appendChild(n); }); return s; }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function addDays(k, n) { var p = k.split('-'); var d = new Date(+p[0], +p[1] - 1, +p[2] + n); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -221,9 +249,11 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
   function b64(s) { var bin = atob(s), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
   function color(c) { return /^#[0-9a-f]{6}$/i.test(String(c || '')) ? c : '#999999'; }
   function txt(v, n) { return String(v == null ? '' : v).slice(0, n || 200); }
-  // Dirección de un centro: …/#getafe abre directamente su pestaña (el programa da ese enlace en cada centro).
+  // Dirección de un centro: …/#getafe abre directamente su pestaña (el programa da ese enlace en cada centro). Es el
+  // identificador de su ZONA, que es también el nombre de su rama en el repositorio (app/lib/zonas.js). Las agendas
+  // publicadas con una versión anterior (rama «Parla-Este» o «agenda-…») se siguen encontrando por su ubicación.
   function slug(t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40); }
-  function centerSlug(c) { return c && c.data ? slug(c.data.center.l || c.data.center.n) : ''; }
+  function centerSlug(c) { return !c ? '' : ZONE_RE.test(c.key) && !OLD_RE.test(c.key) ? c.key : c.data ? slug(c.data.center.l || c.data.center.n) : ''; }
   function wanted() { try { return slug(decodeURIComponent(String(location.hash || '').replace(/^#/, ''))); } catch (e) { return ''; } }
   function setHash(c) { var s = centerSlug(c); try { if (s && wanted() !== s) history.replaceState(null, '', '#' + s); } catch (e) { } }
   function mins(t) { var m = /^(\d{1,2}):(\d{2})/.exec(String(t || '')); return m ? Math.min(1440, +m[1] * 60 + +m[2]) : 0; }
@@ -407,10 +437,15 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
   /* ---------- que ningún aparato se quede con una página antigua ---------- */
   // Cada agenda dice con qué versión del programa se publicó. Si alguna es más nueva que esta página, es que en
   // GitHub ya hay una página más nueva y este navegador enseña una guardada (o la pestaña lleva días abierta):
-  // se recarga sola, una vez por versión. Si GitHub todavía sirve la antigua, se avisa y se puede recargar a mano.
+  // se recarga sola, una vez por versión. Si GitHub todavía sirve la antigua, sale el aviso «Hay una versión más
+  // nueva de esta página (X). Recargar» en la cabecera, con su botón; si tras pulsarlo sigue siendo la antigua, el aviso
+  // explica por qué (GitHub tarda unos minutos en servir la página nueva) en vez de parecer que el botón no hace nada.
   function ver(v) { var m = /^(\d+)\.(\d+)\.(\d+)$/.exec(String(v || '')); return m ? [+m[1], +m[2], +m[3]] : null; }
   function newer(a, b) { var x = ver(a), y = ver(b); if (!x || !y) return false; for (var i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] > y[i]; return false; }
-  function reloadPage(v) { location.replace(location.pathname + '?v=' + encodeURIComponent(v) + '-' + Date.now().toString(36) + (wanted() ? '#' + wanted() : '')); } // (sin perder el centro: …/#getafe)
+  function reloadPage(v, byHand) {
+    if (byHand) { try { sessionStorage.setItem(SS_MAN, v + '|' + Date.now()); } catch (e) { } }
+    location.replace(location.pathname + '?v=' + encodeURIComponent(v) + '-' + Date.now().toString(36) + (wanted() ? '#' + wanted() : '')); // (dirección nueva: el navegador no usa la guardada; sin perder el centro: …/#getafe)
+  }
   function pageCheck() {
     var top = PAGE_V; st.centers.forEach(function (c) { if (c.data && newer(c.data.version, top)) top = String(c.data.version); });
     if (top === PAGE_V) { st.stale = ''; return false; }
@@ -423,7 +458,13 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
     reloadPage(top); return true;
   }
   try { var rl = (sessionStorage.getItem(SS_RL) || '').split('|'); if (rl[0] && rl[0] === PAGE_V && Date.now() - (+rl[1] || 0) < 120000) st.fresh = PAGE_V; } catch (e) { }
-  function staleNote() { return st.stale ? el('div', { class: 'warn', id: 'vieja' }, ['Hay una versión más nueva de esta página (' + st.stale + '). ', el('button', { class: 'lnk', text: 'Recargar', on: { click: function () { reloadPage(st.stale); } } })]) : null; }
+  // ¿Ya se ha pulsado «Recargar» hace poco para esa versión y la página sigue siendo la antigua?
+  function triedByHand() { try { var p = (sessionStorage.getItem(SS_MAN) || '').split('|'); return p[0] === st.stale && Date.now() - (+p[1] || 0) < 30 * 60000; } catch (e) { return false; } }
+  function staleNote() {
+    if (!st.stale) return null;
+    return el('div', { class: 'upd', id: 'vieja', role: 'status' }, [el('span', { text: 'Hay una versión más nueva de esta página (' + st.stale + '). ' }), el('button', { id: 'recargar', text: 'Recargar', on: { click: function () { reloadPage(st.stale, true); } } }),
+      triedByHand() ? el('small', { id: 'viejaNota', text: ' GitHub todavía está sirviendo la página anterior: suele tardar unos minutos. Vuelve a pulsar «Recargar» dentro de un rato; mientras tanto la agenda se ve igual.' }) : null]);
+  }
   function fitGrid() { var g = app.querySelector('.gw'), m = document.querySelector('.modes'); if (g) g.style.height = Math.max(260, window.innerHeight - g.getBoundingClientRect().top - (m && m.offsetHeight ? m.offsetHeight : 0)) + 'px'; }
 
   function kdfOf(file) {
@@ -450,16 +491,18 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
   }
   async function getJson(url) { var r = await fetch(url, { cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer' }); if (r.status === 404) return null; if (!r.ok) { var e = new Error('http ' + r.status); e.status = r.status; throw e; } return r.json(); }
 
-  // Agendas publicadas (un apartado —rama— por centro, con su nombre: «Parla-Este»; hasta la 1.9, «agenda-…»): la
-  // lista, por la API de GitHub (al momento). Si GitHub
+  // Agendas publicadas: una zona —rama— por centro, con su identificador («parla-este»; la 1.10 escribía «Parla-Este»
+  // y hasta la 1.9 era «agenda-…»). No hay lista fija de centros: son las ramas que haya. La lista se pide a la API de
+  // GitHub (al momento), de 100 en 100. Si GitHub
   // limita las consultas (muchas seguidas desde la misma conexión), se leen las ramas ya conocidas de
   // raw.githubusercontent.com, que puede ir unos minutos por detrás.
   function okBranch(b) { return BR_RE.test(String(b)) && !MAIN_RE.test(String(b)); }
   function knownBranches() { try { return JSON.parse(localStorage.getItem(LS_BR) || '[]').filter(okBranch); } catch (e) { return []; } }
   async function listing() {
     try {
-      var refs = await getJson(cfg.api + '/repos/' + cfg.repo + '/branches?per_page=100');
-      var items = (Array.isArray(refs) ? refs : []).map(function (r) { return { key: String(r.name), sha: r.commit && r.commit.sha }; }).filter(function (x) { return okBranch(x.key) && SHA_RE.test(x.sha || ''); });
+      var refs = [];
+      for (var pg = 1; pg <= 5; pg++) { var part = await getJson(cfg.api + '/repos/' + cfg.repo + '/branches?per_page=100&page=' + pg); if (!Array.isArray(part)) break; refs = refs.concat(part); if (part.length < 100) break; }
+      var items = refs.map(function (r) { return { key: String(r.name), sha: r.commit && r.commit.sha }; }).filter(function (x) { return okBranch(x.key) && SHA_RE.test(x.sha || ''); });
       st.branches = items.map(function (x) { return x.key; });
       if (st.remember) { try { localStorage.setItem(LS_BR, JSON.stringify(st.branches)); } catch (e) { } }
       return { items: items.map(function (x) { return { key: x.key, sha: x.sha, url: cfg.raw + '/' + cfg.repo + '/' + x.sha + '/agenda.json' }; }) };
@@ -483,7 +526,7 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
         if (!f || typeof f.id !== 'string' || (OLD_RE.test(it.key) && 'agenda-' + f.id !== it.key)) continue; // (las de antes de la 1.10: cada archivo, solo en su rama)
         out.push({ key: it.key, sha: it.sha, file: f, data: p && p.file === f && p.data ? p.data : await openFile(f) });
       }
-      // La misma agenda en dos apartados (el de antes y el nuevo con el nombre del centro, mientras se quita el viejo): una sola vez.
+      // La misma agenda en dos zonas (la de antes y la nueva con el identificador del centro, mientras se quita la vieja): una sola vez.
       out = out.filter(function (c) { return !out.some(function (o) { return o !== c && o.file.id === c.file.id && (OLD_RE.test(c.key) && !OLD_RE.test(o.key) || (OLD_RE.test(c.key) === OLD_RE.test(o.key) && o.data && c.data && String(o.data.at) > String(c.data.at))); }); });
       out.sort(function (a, b) { return a.data && b.data ? txt(a.data.center.l || a.data.center.n).localeCompare(txt(b.data.center.l || b.data.center.n)) : a.data ? -1 : b.data ? 1 : 0; });
       if (!st.pws.length && out.length && !out.some(function (c) { return c.data; })) st.bad = 'La contraseña de la agenda ha cambiado: escríbela otra vez.';
@@ -535,13 +578,20 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
     var c = st.centers[st.cur] || st.centers[0];
     var head = el('header', {}, [el('div', { class: 't' }, [el('b', { text: 'Consentía Studio' }), el('span', {}, [el('button', { text: '↻', title: 'Actualizar', on: { click: function () { refresh(); } } }), ' ', el('button', { text: 'Salir', on: { click: logout } })])])]);
     if (st.centers.length > 1) head.appendChild(el('div', { class: 'tabs' }, st.centers.map(function (x, i) { return el('button', { class: i === st.cur ? 'on' : '', text: x.data ? txt(x.data.center.l || x.data.center.n, 40) : 'Centro bloqueado', on: { click: function () { st.cur = i; st.scroll = null; setHash(x); render(); } } }); })));
+    if (st.stale) head.appendChild(staleNote());
     app.appendChild(head);
     // Agenda (izquierda) y calculadora (derecha). En el móvil se ve una u otra: se cambia con la barra de abajo.
     var pane; try { pane = calcPane(c); } catch (e) { st.cNode = null; st.cKey = ''; ticketBox = totalBox = null; pane = el('aside', { class: 'calc', id: 'calculadora' }, [el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: 'No se ha podido abrir la lista de precios de este centro.' })])]); } // la calculadora nunca deja sin agenda
     var root = app, pA = el('div', { class: 'pA' }), pC = el('div', { class: 'pC' }, [pane]);
     root.appendChild(el('div', { class: 'split m-' + st.mode }, [pA, pC]));
     var oldM = document.querySelector('.modes'); if (oldM) oldM.remove();
-    document.body.appendChild(el('nav', { class: 'modes' }, [el('button', { class: st.mode === 'agenda' ? 'on' : '', id: 'verAgenda', text: 'Agenda', on: { click: function () { st.mode = 'agenda'; st.scroll = null; render(); } } }), el('button', { class: st.mode === 'calc' ? 'on' : '', id: 'verCalc', on: { click: function () { st.mode = 'calc'; render(); window.scrollTo(0, 0); } } }, ['Calculadora', el('small')])]));
+    // (dos botones como los de un iPhone: icono y nombre; en «Calculadora», lo que lleva sumada la cuenta. El elegido
+    // solo se anima al cambiar de uno a otro, no cada vez que se repinta la pantalla.)
+    var mBtn = function (id, mode, label, icon, more, go) { var on = st.mode === mode; var a = { class: on ? (st.segGo ? 'on go' : 'on') : '', id: id, type: 'button', on: { click: function () { st.segGo = st.mode !== mode; go(); } } }; if (on) a['aria-current'] = 'page'; return el('button', a, [svg(icon), el('span', { text: label })].concat(more || [])); };
+    document.body.appendChild(el('nav', { class: 'modes', 'aria-label': 'Agenda o calculadora' }, [el('div', { class: 'seg' }, [
+      mBtn('verAgenda', 'agenda', 'Agenda', ICON.agenda, null, function () { st.mode = 'agenda'; st.scroll = null; render(); }),
+      mBtn('verCalc', 'calc', 'Calculadora', ICON.calc, [el('small')], function () { st.mode = 'calc'; render(); window.scrollTo(0, 0); })])]));
+    st.segGo = false;
     document.body.className = 'has-modes'; modesBadge();
     app = pA; // (lo que sigue —días y agenda— se pinta en el panel de la agenda)
     try { renderAgenda(c); } finally { app = root; }
@@ -553,7 +603,6 @@ body.has-modes .cTotal{bottom:calc(46px + env(safe-area-inset-bottom))}
     app.appendChild(el('div', { class: 'days' }, [el('button', { text: '‹', title: 'Día anterior', on: { click: function () { st.day = addDays(st.day, -1); render(); } } }), el('div', { class: 'd', text: longDay(st.day) }), el('button', { text: '›', title: 'Día siguiente', on: { click: function () { st.day = addDays(st.day, 1); render(); } } }), st.day !== today() ? el('button', { class: 'hoy', text: 'Hoy', on: { click: function () { st.day = today(); render(); } } }) : null]));
     var main = el('main');
     if (st.msg) main.appendChild(el('div', { class: 'warn', text: st.msg }));
-    if (st.stale) main.appendChild(staleNote());
     if (!c) { main.appendChild(el('div', { class: 'none', text: st.loading ? 'Cargando…' : 'No hay agendas publicadas.' })); app.appendChild(main); return; }
     if (!c.data) {
       var oi = el('input', { type: 'password', placeholder: 'Contraseña de este centro' });
