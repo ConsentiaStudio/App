@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="3.0.1">
-<meta name="consentia-agenda-firma" content="bicgh1/sA7pCk8HzK6thWKa81iZHDYY4uVHm4SlnDhK2zDC24VmSeu9SFphFtKFeC7okgK3OUXJ2ceTw/RTiAA==">
+<meta name="consentia-agenda-version" content="3.2.0">
+<meta name="consentia-agenda-firma" content="k7THPR+Tej5++BEvWdY6A1CoHawAshCvcCr2FpPPKNhXEOhZMp2EEUrXm1o425C7TucgMRqHzyIGt8FMkmPCBQ==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-qEUZRrL74yalTKRJALDfeH0Gw+rcq0JVzw7PU2GsiP8='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-TELOzMxeJxaZtD+caEr7RyQ8sKUDPXFBHe8duRWLal4='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
@@ -78,6 +78,8 @@ html.lock body{position:fixed;top:0;left:0;right:0;bottom:0}
 html.lock body{background:#f4f2ee url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 800' preserveAspectRatio='xMidYMid slice'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0035 0.009' numOctaves='4' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.41 0 0 0 0 0.40 0 0 0 -1.1 0.62'/%3E%3C/filter%3E%3Cfilter id='b'%3E%3CfeGaussianBlur stdDeviation='0.6'/%3E%3C/filter%3E%3Crect width='400' height='800' fill='%23f4f2ee'/%3E%3Crect width='400' height='800' filter='url(%23c)' opacity='0.55'/%3E%3Cg fill='none' stroke='%23948f88' stroke-linecap='round' filter='url(%23b)'%3E%3Cpath d='M-20 120 C 80 170, 140 260, 210 300 S 330 420, 430 470' stroke-width='0.9' opacity='0.35'/%3E%3Cpath d='M120 -10 C 160 90, 150 160, 230 240 S 300 330, 290 420' stroke-width='0.6' opacity='0.28'/%3E%3Cpath d='M-30 560 C 60 520, 150 600, 230 610 S 360 560, 440 640' stroke-width='0.7' opacity='0.25'/%3E%3Cpath d='M260 500 C 300 560, 280 640, 340 720 S 420 790, 430 820' stroke-width='0.5' opacity='0.22'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat}
 .lockBg{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M-10 90 C 70 20, 170 20, 250 90 S 370 190, 410 160' fill='none' stroke='%23ff2b91' stroke-width='1.3' vector-effect='non-scaling-stroke' opacity='0.85'/%3E%3Cpath d='M-10 120 C 90 60, 180 70, 260 125 S 370 205, 410 190' fill='none' stroke='%23111113' stroke-width='0.8' vector-effect='non-scaling-stroke' opacity='0.35'/%3E%3C/svg%3E") left bottom/100% 30vh no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.2 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E") repeat}
 .login{position:relative;z-index:1;max-width:350px}
+.lockLogos{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0}
+.lockLogo{position:absolute;display:block;user-select:none;-webkit-user-drag:none}
 .login h1{position:relative;font-size:19px;font-weight:500;letter-spacing:.3em;text-indent:.3em;margin:0 0 40px}
 .login h1::after{content:'';position:absolute;left:50%;bottom:-17px;width:30px;height:1px;margin-left:-15px;background:var(--pink)}
 .pwBox{display:flex;align-items:center;height:58px;background:rgba(255,255,255,.8);border:1px solid #d6d2ca;border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 14px 32px -16px rgba(17,17,19,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .15s,box-shadow .15s}
@@ -508,7 +510,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     calcData = calc; ticketBox = el('div', { class: 'cTicket', id: 'cuenta' });
     totalBox = el('button', { class: 'cTotal', id: 'total', type: 'button', title: 'Ver la cuenta', on: { click: function () { if (st.lines.length) setTk(!st.tk); } } });
     st.cNode = pane; st.cKey = key;
-    if (!calc) { pane.appendChild(el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: d ? 'Este centro todavía no publica su lista de precios. Se activa en el programa: Ajustes → Agenda en el móvil → «Calculadora en la misma página».' : 'Abre primero la agenda de un centro.' })])); ticketBox = totalBox = null; return pane; }
+    if (!calc) { pane.appendChild(el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: d ? 'Este centro todavía no publica su lista de precios. Se activa en el programa: Ajustes → Agenda móvil (web) → «Calculadora en la misma página».' : 'Abre primero la agenda de un centro.' })])); ticketBox = totalBox = null; return pane; }
     var tab = function (id, label) { return el('button', { type: 'button', class: st.cTab === id ? 'on' : '', 'data-tab': id, text: label, on: { click: function () { st.cTab = id; render(); } } }); };
     pane.appendChild(el('div', { class: 'cTabs' }, [tab('serv', 'Servicios'), tab('extras', 'Extras'), calc.bonos.length ? tab('bonos', 'Bonos') : null]));
     var body = el('div', { class: 'cBody' }); pane.appendChild(body);
@@ -660,7 +662,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
       if (st.want) { var w = out.findIndex(function (c) { return centerSlug(c) === st.want; }); if (w >= 0) { at = w; st.want = ''; } } // el centro de la dirección (…/#getafe)
       st.centers = out; st.cached = !!l.cached; st.cur = at;
       if (pageCheck()) return; // hay una página más nueva: se está recargando
-      st.msg = out.length ? '' : 'Todavía no hay ninguna agenda publicada. Se publica desde el programa: Ajustes → Agenda en el móvil.';
+      st.msg = out.length ? '' : 'Todavía no hay ninguna agenda publicada. Se publica desde el programa: Ajustes → Agenda móvil (web).';
     } catch (e) {
       st.msg = e.limit ? 'GitHub limita las consultas seguidas desde esta conexión. Espera unos minutos y vuelve a intentarlo.' : 'No se ha podido descargar la agenda (¿hay Internet?). Se volverá a intentar.';
     }
@@ -677,6 +679,30 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   function logout() { st.pws = []; st.keys = {}; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.xGrp = ''; st.tk = false; st.fotos = {}; st.fRev++; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; st.view = 'cols'; var sh = document.querySelector('.sheetBack'); if (sh) sh.remove(); forget(); render(); }
   function setView(v) { st.view = v; st.scroll = null; render(); }
 
+  // (3.2.0) Fondo de la entrada: el logotipo (la C) pequeño y casi transparente, repartido AL AZAR pero cubriendo toda la
+  // pantalla: una C por casilla de una cuadrícula invisible, en un sitio, tamaño y giro al azar dentro de su casilla (así
+  // nunca se amontonan ni dejan huecos grandes). Las casillas son más grandes en pantallas grandes: no hay muchísimas.
+  function logoField() {
+    var box = el('div', { class: 'lockLogos', 'aria-hidden': 'true' });
+    var w = Math.max(320, window.innerWidth || 0), h = Math.max(480, window.innerHeight || 0);
+    var cell = w < 600 ? 104 : w < 1100 ? 132 : 158;
+    var cols = Math.ceil(w / cell), rows = Math.ceil(h / cell);
+    var cw = w / cols, ch = h / rows;
+    // (sin tapar el logotipo grande ni el nombre de arriba: esa zona se deja limpia)
+    var hw = Math.min(175, w * 0.3), hx0 = w / 2 - hw, hx1 = w / 2 + hw, hy0 = h * 0.13 - 24, hy1 = h * 0.13 + 190;
+    var clash = function (x, y, s) { return x + s > hx0 && x < hx1 && y + s > hy0 && y < hy1; };
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var size = Math.round((w < 600 ? 20 : 24) + Math.random() * (w < 600 ? 14 : 18)), x = 0, y = 0, ok = false;
+      for (var k = 0; k < 6 && !ok; k++) { x = c * cw + Math.random() * Math.max(0, cw - size); y = r * ch + Math.random() * Math.max(0, ch - size); ok = !clash(x, y, size); }
+      if (!ok) continue;
+      var im = el('img', { alt: '', src: LOGO }); im.className = 'lockLogo';
+      im.style.cssText = 'left:' + x.toFixed(1) + 'px;top:' + y.toFixed(1) + 'px;width:' + size + 'px;height:' + size + 'px;opacity:' + (0.045 + Math.random() * 0.05).toFixed(3) + ';transform:rotate(' + Math.round(Math.random() * 50 - 25) + 'deg)';
+      box.appendChild(im);
+    }
+    return box;
+  }
+  var logoResize = null;
+  window.addEventListener('resize', function () { clearTimeout(logoResize); logoResize = setTimeout(function () { var old = document.querySelector('.lockLogos'); if (old) old.replaceWith(logoField()); }, 250); });
   function render() {
     // (si al actualizar se estaba escribiendo en la calculadora, se sigue donde se estaba: se mira antes de vaciar la pantalla)
     var foc = st.cNode && st.cNode.contains(document.activeElement) ? document.activeElement : null, cb = st.cNode && st.cNode.querySelector('.cBody'), cbTop = cb ? cb.scrollTop : 0;
@@ -686,7 +712,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     var creds = st.pws.length || Object.keys(st.keys).length;
     // La entrada: solo el nombre y la contraseña.
     var brand = function () { return el('h1', { text: 'Consentía Studio' }); }, logo = function () { return el('img', { class: 'logo', id: 'logo', alt: '', src: LOGO }); };
-    var bg = function () { app.appendChild(el('div', { class: 'lockBg', 'aria-hidden': 'true' })); }; // (textura y línea dorada)
+    var bg = function () { app.appendChild(el('div', { class: 'lockBg', 'aria-hidden': 'true' })); app.appendChild(logoField()); }; // (textura y línea dorada; (3.2.0) y las C de fondo)
     var ico = function (d) { var s = svg(d.map(function (x) { return ['path', { d: x }]; })); return s; };
     var locked = !st.ready || !creds || (!opened.length && st.centers.length && !st.loading);
     document.documentElement.className = locked ? 'lock' : ''; // (la entrada no se desplaza; la agenda, sí)
