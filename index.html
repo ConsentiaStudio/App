@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="3.2.0">
-<meta name="consentia-agenda-firma" content="k7THPR+Tej5++BEvWdY6A1CoHawAshCvcCr2FpPPKNhXEOhZMp2EEUrXm1o425C7TucgMRqHzyIGt8FMkmPCBQ==">
+<meta name="consentia-agenda-version" content="3.2.1">
+<meta name="consentia-agenda-firma" content="nk2VCvFbTY8JYEtoEzPUkglbtZwjvaU1ys6sbiBAAoNczFTxlTRbUUVZpifqLCwacbJtYsnry+ZJWzXulPIpAg==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-TELOzMxeJxaZtD+caEr7RyQ8sKUDPXFBHe8duRWLal4='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-S7bErpJrp7Wkgza/nxVJCBqKJeOT4UEzJm974498o8Y='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
@@ -26,10 +26,44 @@ header button{background:transparent;color:#fff;border:1px solid #444;border-rad
 .tabs{display:flex;gap:6px;overflow-x:auto;margin-top:10px}
 .tabs button{flex:none;background:#26262a;color:#ddd;border:0;border-radius:16px;padding:6px 12px;font:inherit;font-size:13px}
 .tabs button.on{background:var(--pink);color:#fff}
-.days{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:var(--hh,56px);z-index:4}
-.days button{background:#fff;border:1px solid var(--line);border-radius:4px;min-width:40px;height:36px;font:inherit;font-size:16px}
-.days .d{flex:1;text-align:center;font-weight:700}
-.days .hoy{font-size:12px;min-width:auto;padding:0 10px}
+/* (3.2.1) El selector de fechas, como el de la agenda del programa: botones blancos con borde y letra en mayúsculas
+   (‹ HOY ›) y el recuadro de la fecha, que despliega el calendario. */
+.days{display:flex;align-items:center;gap:6px;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:var(--hh,56px);z-index:4}
+.days button{background:#fff;color:var(--ink);border:1px solid #bdb9b1;border-radius:2px;min-width:38px;height:38px;font:inherit;font-size:18px;line-height:1;padding:0;-webkit-tap-highlight-color:transparent}
+.days button:active{border-color:var(--ink)}
+.days .hoy{font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;min-width:auto;padding:0 12px}
+.days .d{flex:1;min-width:0;display:flex;align-items:center;gap:8px;justify-content:flex-start;padding:0 10px;font-size:14px;font-weight:800;text-align:left}
+.days .d span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.days .d svg{flex:none;width:18px;height:18px;fill:none;stroke:var(--ink);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.days .d svg .f{fill:var(--ink);stroke:none}
+.days .d i{font-style:normal;font-size:11px;color:var(--muted)}
+/* El calendario (en una ficha) */
+.cal{padding:2px 0 4px}
+.calH{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.calH b{font-size:16px;text-transform:capitalize}
+.sheet .cal button{margin:0;width:auto;background:transparent;color:var(--ink);border-radius:8px;padding:0;font-weight:700}
+.sheet .cal .calNav{width:44px;height:40px;border:1px solid var(--line);font-size:20px}
+.calG{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.calW{font-size:11px;font-weight:800;color:var(--muted);padding:4px 0}
+.sheet .cal .calD{height:42px;font-size:15px}
+.sheet .cal .calD.out{color:#bdb9b1}
+.sheet .cal .calD.nopub{opacity:.45}
+.sheet .cal .calD.today{color:var(--pink);font-weight:900}
+.sheet .cal .calD.sel{background:var(--ink);color:#fff;opacity:1}
+.calF{display:flex;align-items:center;gap:12px;margin-top:8px}
+.sheet .cal .calHoy{border:1px solid #bdb9b1;padding:8px 14px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.calF small{color:var(--muted);font-size:12px}
+/* (3.2.1) Cabinas (como en el programa: el nombre en su color) y el estado de WhatsApp de cada cita. */
+.cabPill{display:inline-block;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px;border-radius:99px;font-size:9.5px;font-weight:800;line-height:1.55;vertical-align:1px;margin-left:4px}
+.ap .apTop{display:flex;align-items:center;gap:4px;min-width:0}.ap .apTop .t{flex:1;min-width:0}
+.ap .ic{display:flex;align-items:center;gap:3px;flex:none}.ap .ic .cabPill{margin-left:0;max-width:64px}
+.waSt{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;font-size:9.5px;font-weight:900;line-height:1;vertical-align:-3px;margin-left:4px;flex:none}
+.ap .ic .waSt{margin-left:0}
+.waSt.ok{background:#1f5fbf;color:#fff}.waSt.chg{background:#f08c00;color:#fff}
+.waSt.sent{background:#e3f5ea;color:#1f9d55;border:1px solid #9fd8b4}.waSt.pend{background:#fff3d6;color:#b07000;border:1px dashed #d9a400}
+.waSt svg{width:9px;height:9px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.sheet .waLine{display:flex;align-items:center;gap:6px;font-size:13px;color:#44423d;margin-top:6px}.sheet .waLine .waSt{margin:0}
+.status .cabSel{flex:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:4px;padding:5px 6px;font:inherit;font-size:12px;font-weight:700;max-width:46%}
+.status .cabSel.on{border-color:var(--ink);background:var(--ink);color:#fff}
 main{padding:10px 12px 40px;max-width:720px;margin:0 auto}
 .emp{background:#fff;border:1px solid var(--line);border-radius:6px;margin:10px 0;overflow:hidden}
 .emp h3{margin:0;padding:9px 12px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
@@ -75,13 +109,13 @@ html.lock body{position:fixed;top:0;left:0;right:0;bottom:0}
 .login button[disabled]{opacity:.6}
 /* (2.2.1) La entrada: fondo de mármol claro con su textura (dibujado en la propia página, «data:», sin cargar nada de
    fuera), una línea rosa abajo (los colores de la marca, como el resto) y la casilla y el botón más cuidados (candado, ver la contraseña, flecha). */
-html.lock body{background:#f4f2ee url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 800' preserveAspectRatio='xMidYMid slice'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0035 0.009' numOctaves='4' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.41 0 0 0 0 0.40 0 0 0 -1.1 0.62'/%3E%3C/filter%3E%3Cfilter id='b'%3E%3CfeGaussianBlur stdDeviation='0.6'/%3E%3C/filter%3E%3Crect width='400' height='800' fill='%23f4f2ee'/%3E%3Crect width='400' height='800' filter='url(%23c)' opacity='0.55'/%3E%3Cg fill='none' stroke='%23948f88' stroke-linecap='round' filter='url(%23b)'%3E%3Cpath d='M-20 120 C 80 170, 140 260, 210 300 S 330 420, 430 470' stroke-width='0.9' opacity='0.35'/%3E%3Cpath d='M120 -10 C 160 90, 150 160, 230 240 S 300 330, 290 420' stroke-width='0.6' opacity='0.28'/%3E%3Cpath d='M-30 560 C 60 520, 150 600, 230 610 S 360 560, 440 640' stroke-width='0.7' opacity='0.25'/%3E%3Cpath d='M260 500 C 300 560, 280 640, 340 720 S 420 790, 430 820' stroke-width='0.5' opacity='0.22'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat}
-.lockBg{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200' preserveAspectRatio='none'%3E%3Cpath d='M-10 90 C 70 20, 170 20, 250 90 S 370 190, 410 160' fill='none' stroke='%23ff2b91' stroke-width='1.3' vector-effect='non-scaling-stroke' opacity='0.85'/%3E%3Cpath d='M-10 120 C 90 60, 180 70, 260 125 S 370 205, 410 190' fill='none' stroke='%23111113' stroke-width='0.8' vector-effect='non-scaling-stroke' opacity='0.35'/%3E%3C/svg%3E") left bottom/100% 30vh no-repeat,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.2 0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E") repeat}
+html.lock body{background:#f4f2ee} /* (3.2.1) la entrada, limpia: sin las líneas ni las vetas de antes; solo los logotipos */
+.lockBg{display:none}
 .login{position:relative;z-index:1;max-width:350px}
 .lockLogos{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0}
 .lockLogo{position:absolute;display:block;user-select:none;-webkit-user-drag:none}
 .login h1{position:relative;font-size:19px;font-weight:500;letter-spacing:.3em;text-indent:.3em;margin:0 0 40px}
-.login h1::after{content:'';position:absolute;left:50%;bottom:-17px;width:30px;height:1px;margin-left:-15px;background:var(--pink)}
+.login h1::after{display:none} /* (3.2.1) sin la rayita rosa debajo del nombre */
 .pwBox{display:flex;align-items:center;height:58px;background:rgba(255,255,255,.8);border:1px solid #d6d2ca;border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 14px 32px -16px rgba(17,17,19,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:border-color .15s,box-shadow .15s}
 .pwBox:focus-within{border-color:var(--pink);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 4px rgba(255,43,145,.16),0 14px 32px -16px rgba(17,17,19,.22)}
 .login svg{width:20px;height:20px;fill:none;stroke:#77736c;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
@@ -203,6 +237,11 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
 .xCard b{display:block;font-size:14px;font-weight:600;line-height:1.25}
 .xCard small{display:block;margin-top:3px;font-size:12.5px;font-weight:700;color:var(--pink)}
 .cHint{font-size:12.5px;color:var(--muted);margin:10px 2px 0}
+/* (3.2.1) Índice de categorías / grupos y «‹ volver» */
+.cIndex .cItem b{font-weight:700}.cIndex .chev{flex:none;font-size:22px;line-height:1;color:#b9b6b0}
+.cBack{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+.cBack .back{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font:inherit;font-size:13.5px;font-weight:700;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.cBack b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Ficha de un extra */
 .sheet .xFoto{display:block;width:100%;max-height:38vh;object-fit:contain;border-radius:12px;background:#f4f2ee;margin-bottom:12px}
 .sheet .xPrecio{color:var(--pink);font-weight:700;margin-top:2px}
@@ -263,9 +302,13 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   .cBody{flex:1 1 auto;overflow:auto;min-height:140px}
   .cCats{flex-wrap:wrap;overflow:visible;margin:0;padding:0 0 10px}
   .cTicket{display:none;flex:0 1 auto;max-height:52%;overflow:auto;border-top:1px solid var(--line);padding:12px 14px 6px}
-  .calc.tk .cTicket{display:block}
+  .calc.tk .cTicket{display:block;position:relative;z-index:7}
   .cTicket h4 button.x{display:none}
-  .cTotal{position:static;width:100%;border-radius:0;box-shadow:none;cursor:pointer}
+  .cTotal{position:relative;z-index:8;width:100%;border-radius:0;box-shadow:none;cursor:pointer}
+  /* (3.2.1) Con la cuenta abierta, en el ordenador también se oscurece el resto de la pantalla (igual que en el móvil);
+     tocando fuera se cierra. */
+  .calc.tk .tkBack{display:block;position:fixed;top:0;left:0;right:0;bottom:0;z-index:6;background:rgba(17,17,19,.4)}
+  body.tkOpen .pC{z-index:30}
 }
 .other{display:flex;gap:6px;margin-top:8px}.other input{flex:1;font:inherit;padding:8px;border:1px solid #bdb9b1;border-radius:4px}.other button{border:0;background:var(--ink);color:#fff;border-radius:4px;padding:0 12px;font:inherit}
 </style>
@@ -293,7 +336,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   // pws: contraseñas escritas en esta visita. keys: claves ya calculadas (por sal). Las dos, solo en memoria: al
   // cerrar o recargar la página hay que escribir la contraseña otra vez.
   // fotos: las fotos de los extras de cada centro, por la huella que trae su lista de precios (se bajan una vez).
-  var st = { pws: [], keys: {}, branches: [], centers: [], cur: 0, day: today(), msg: '', bad: '', loading: false, ready: false, lastCheck: null, cached: false, view: 'cols', scroll: null, stale: '', fresh: '', want: '', mode: 'agenda', lines: [], disc: -1, from: '', cTab: 'serv', cCat: '', xGrp: '', tk: false, cKey: '', cNode: null, fotos: {}, fRev: 0 };
+  var st = { pws: [], keys: {}, branches: [], centers: [], cur: 0, day: today(), msg: '', bad: '', loading: false, ready: false, lastCheck: null, cached: false, view: 'cols', scroll: null, stale: '', fresh: '', want: '', mode: 'agenda', lines: [], disc: -1, from: '', cTab: 'serv', cCat: '', xGrp: '', tk: false, cKey: '', cNode: null, fotos: {}, fRev: 0, loginAt: 0, cab: -1, calM: '' };
   st.want = wanted(); // centro pedido en la dirección (…/#getafe)
 
   /* ---------- en el aparato no se guarda nada ---------- */
@@ -366,7 +409,8 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   function apptSheet(a, who, d) {
     // «Calcular»: lleva los servicios de la cita a la calculadora (con los precios de ese centro).
     var can = d && calcOf(d) && Array.isArray(a.si) && a.si.some(function (i) { return calcOf(d).services[i]; });
-    sheet([el('div', { class: 'h', text: txt(a.s, 5) + '–' + txt(a.e, 5) }), el('h2', {}, [txt(a.c, 80) || 'Sin clienta', stateTag(a)]), el('div', { class: 'who', text: who + (a.k ? ' · ' + txt(a.k, 30) : '') }), a.sv ? el('p', { text: txt(a.sv, 200) }) : null].concat(notes(a).map(function (n) { if (n && n.className !== 'offTag') n.title = ''; return n; })),
+    var w = WA_ST[a.w];
+    sheet([el('div', { class: 'h', text: txt(a.s, 5) + '–' + txt(a.e, 5) }), el('h2', {}, [txt(a.c, 80) || 'Sin clienta', stateTag(a)]), el('div', { class: 'who' }, [who + ' ', cabPill(a, d)]), w ? el('div', { class: 'waLine' }, [waIco(a), ' ' + w[2]]) : null, a.sv ? el('p', { text: txt(a.sv, 200) }) : null].concat(notes(a).map(function (n) { if (n && n.className !== 'offTag') n.title = ''; return n; })),
       can ? function (close) { return el('button', { class: 'calcBtn', id: 'calcular', text: 'Calcular', on: { click: function () { close(); fromAppt(a, d); } } }); } : null);
   }
 
@@ -379,7 +423,16 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   function objs(v, n) { return (Array.isArray(v) ? v : []).slice(0, n).map(function (x) { return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; }); } // (lo que no sea un objeto, vacío: los servicios se señalan por su posición)
   function calcOf(d) { var c = d && d.calc; return c && typeof c === 'object' && Array.isArray(c.services) ? { services: objs(c.services, 400), addons: objs(c.addons, 200), bonos: objs(c.bonos, 60), discounts: objs(c.discounts, 30), fotos: typeof c.fotos === 'string' && /^[0-9a-f]{8,64}$/.test(c.fotos) ? c.fotos : '' } : null; }
   // Lo mismo que hace el programa al cobrar (renderer/js/core/domain.js → addonPrice / addonPriceText).
-  function addonPrice(a, count, unit) {
+  // (3.2.1) Decoraciones fijas: de 1 a «few» uñas, «fp» € por uña en vez del precio de la manicura (= domain.js → addonPrice).
+  function fewOf(a) { var f = Math.round(+a.few || 0); return f > 0 && f < 10 && (a.mode === 'fixed' || a.mode === 'steps') ? { few: f, p: Math.max(0, +a.fp || 0) } : null; }
+  function addonPrice(a, count, unit, nails) {
+    var r = addonPriceBase(a, count, unit), f = fewOf(a); if (!f) return r;
+    var n = Math.max(1, Math.min(10, Math.round(+nails || 10))), full = a.mode === 'steps' ? +a.base || 0 : num(a.min);
+    if (n > f.few) return r;
+    var extra = a.mode === 'steps' && r.amount - full > 0;
+    return { amount: r2(r.amount - full + f.p * n), detail: nUn(n, 'uña', 'uñas') + ' × ' + money(f.p) + (extra ? ' · ' + r.detail : '') };
+  }
+  function addonPriceBase(a, count, unit) {
     if (a.mode === 'steps') {
       var inc = +a.inc || 0, hasBase = +a.base > 0;
       var n = Math.max(hasBase ? inc : 0, Math.min(99, Math.round(+count || 0))), extra = Math.max(0, n - inc);
@@ -397,7 +450,8 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     if (a.mode === 'tiered') { var t = objs(a.tiers, 10).filter(function (x) { return nails >= x.from && nails <= x.to; })[0] || { price: 0, note: '' }; return { amount: r2(t.price), detail: nUn(nails, 'uña', 'uñas') + (t.note ? ' · ' + txt(t.note, 60) : '') }; }
     return { amount: r2(num(unit == null ? a.min : unit)), detail: txt(a.g, 60) };
   }
-  function addonText(a) {
+  function addonText(a) { var t = addonTextBase(a), f = fewOf(a); return f ? t + ' · de 1 a ' + f.few + ' uñas, ' + mShort(f.p) + ' / uña' : t; }
+  function addonTextBase(a) {
     if (a.mode === 'open') return 'precio de su caja';
     if (a.mode === 'tiered') return objs(a.tiers, 10).map(function (t) { return t.from + '-' + t.to + ' uñas: ' + mShort(t.price); }).join(' · ');
     if (a.mode === 'steps') {
@@ -449,7 +503,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   var ticketBox = null, totalBox = null, calcData = null;
   var CHEV = [['path', { d: 'M6 15l6-6 6 6' }]];
   // La cuenta: en el móvil es una barra abajo (lo que lleva sumado) que al tocarla sube con sus líneas.
-  function setTk(v) { st.tk = !!v && st.lines.length > 0; if (st.cNode) st.cNode.className = 'calc' + (st.tk ? ' tk' : ''); }
+  function setTk(v) { st.tk = !!v && st.lines.length > 0; if (st.cNode) st.cNode.className = 'calc' + (st.tk ? ' tk' : ''); document.body.classList.toggle('tkOpen', st.tk); } // (3.2.1: tkOpen, para oscurecer también en el ordenador)
   function drawTicket(flash) {
     if (!ticketBox) return; ticketBox.innerHTML = ''; totalBox.innerHTML = ''; var t = totals(calcData), n = st.lines.length;
     if (!n && st.tk) setTk(false);
@@ -475,24 +529,25 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   }
   // La ficha de un extra: su foto en grande, su criterio, lo justo que hay que decir y cuánto es.
   function addonSheet(a, calc) {
-    var foto = fotoOf(calc, a), fixed = a.mode === 'fixed', open = a.mode === 'open', steps = a.mode === 'steps';
+    var fw = fewOf(a), nails = 10, foto = fotoOf(calc, a), fixed = a.mode === 'fixed' && !fw, open = a.mode === 'open', steps = a.mode === 'steps';
     var range = a.mode === 'perNail' && (a.max == null || a.max === '' || +a.min !== +a.max);
     var cMin = steps ? (+a.base > 0 ? +a.inc || 0 : 0) : 1, cMax = steps ? 30 : 10, cnt = steps ? +a.inc || 0 : Math.min(cMax, (+a.inc || 0) + 1);
     var uMin = +a.min || 0, uMax = a.max == null || a.max === '' ? Math.max(99, uMin) : Math.max(uMin, +a.max), uni = uMin;
     var amt = open ? el('input', { type: 'number', inputmode: 'decimal', min: '0', step: '0.5', placeholder: '0,00', id: 'xImporte', 'aria-label': 'Importe' }) : null;
     var res = el('div', { class: 'xRes', id: 'xRes' }), addBtn = el('button', { class: 'calcBtn', id: 'xAdd', type: 'button' });
-    var price = function () { return addonPrice(a, cnt, open ? amt.value : uni); };
+    var price = function () { return addonPrice(a, cnt, open ? amt.value : uni, nails); };
     var sync = function () { var pr = price(); res.className = 'xRes'; res.textContent = fixed || open ? '' : pr.detail + ' → ' + money(pr.amount); addBtn.textContent = 'Añadir · ' + (pr.amount > 0 || !fixed ? money(pr.amount) : 'sin coste'); };
     var unitName = steps ? (function (t) { return t.charAt(0).toUpperCase() + t.slice(1); })(txt(a.us, 30) || 'unidades') : 'Uñas';
     var kids = [foto ? el('img', { class: 'xFoto', id: 'xFoto', alt: '', src: foto }) : null, el('h2', { text: txt(a.n, 80) }), el('div', { class: 'xPrecio', text: addonText(a) }), a.help ? el('p', { class: 'xAyuda', text: txt(a.help, 200) }) : null,
-      fixed || open ? null : stepper('xNum', unitName, { get: function () { return cnt; }, set: function (v) { cnt = v; }, min: cMin, max: cMax, step: 1, change: sync }),
+      fw ? stepper('xUnas', 'Uñas decoradas', { get: function () { return nails; }, set: function (v) { nails = v; }, min: 1, max: 10, step: 1, change: sync }) : null,
+      fixed || open || a.mode === 'fixed' ? null : stepper('xNum', unitName, { get: function () { return cnt; }, set: function (v) { cnt = v; }, min: cMin, max: cMax, step: 1, change: sync }),
       range ? stepper('xUni', '€ por uña', { get: function () { return uni; }, set: function (v) { uni = v; }, min: uMin, max: uMax, step: 0.5, fmt: money, change: sync }) : null,
       open ? el('div', { class: 'stp' }, [el('span', { text: 'Importe (€)' }), amt]) : null, res];
     if (amt) amt.addEventListener('input', sync);
     sheet(kids, function (close) {
       addBtn.addEventListener('click', function () {
         var pr = price();
-        if (!fixed && !(pr.amount > 0)) { res.className = 'xRes no'; res.textContent = open ? 'Escribe el importe (el precio de su caja).' : 'Eso está incluido en el servicio: no hay suplemento que cobrar.'; return; }
+        if (!fixed && a.mode !== 'fixed' && !(pr.amount > 0)) { res.className = 'xRes no'; res.textContent = open ? 'Escribe el importe (el precio de su caja).' : 'Eso está incluido en el servicio: no hay suplemento que cobrar.'; return; }
         addLine({ kind: 'addon', name: a.n, detail: fixed || pr.detail === txt(a.g, 60) ? a.g : (a.g === a.n ? '' : txt(a.g, 60) + ' · ') + pr.detail, amount: fixed ? +a.min || 0 : pr.amount }); close();
       });
       return addBtn;
@@ -521,43 +576,60 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
         bl.appendChild(el('button', { class: 'cItem', type: 'button', on: { click: function () { addLine({ kind: 'bono', name: b.n, detail: nUn(+b.s || 1, 'sesión', 'sesiones'), amount: b.p }); } } }, [el('b', {}, [txt(b.n, 80), el('small', { text: nUn(+b.s || 1, 'sesión', 'sesiones') + (+b.v ? ' · caduca a los ' + nUn(+b.v, 'mes', 'meses') : '') + ' · ' + svTxt })]), el('span', { class: 'p', text: money(b.p) })])); });
       body.appendChild(bl);
     } else if (st.cTab === 'extras') {
-      // Los grupos, arriba (se elige uno); debajo, sus extras: con foto, en baldosas; sin foto, en lista. Al tocar
-      // uno sube su ficha. Sin desplegables.
+      // (3.2.1) Primero el ÍNDICE de grupos (Francesa, Nail art…); al tocar uno, sus extras (con foto, en baldosas; sin foto,
+      // en lista) y «‹ Extras» para volver al índice. El buscador, arriba, mira en todos. Al tocar un extra sube su ficha.
       var groups = []; calc.addons.forEach(function (a) { var g = groups.filter(function (x) { return x.name === a.g; })[0]; if (!g) groups.push(g = { name: a.g, list: [] }); g.list.push(a); });
       if (!groups.length) body.appendChild(el('div', { class: 'none', text: 'Este centro no tiene extras de uñas.' }));
       else {
-        if (!groups.some(function (g) { return g.name === st.xGrp; })) st.xGrp = groups[0].name;
+        if (groups.length === 1) st.xGrp = groups[0].name; else if (st.xGrp && !groups.some(function (g) { return g.name === st.xGrp; })) st.xGrp = '';
         var xq = el('input', { class: 'cSearch', id: 'buscarExtra', type: 'search', placeholder: 'Buscar un extra…', autocomplete: 'off' }), xl = el('div', { id: 'extras' }), wait = fotosWait(calc);
-        var xbar = el('div', { class: 'cCats', id: 'grupos' }, groups.map(function (g) { return el('button', { type: 'button', class: g.name === st.xGrp ? 'on' : '', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); } } }, [txt(g.name, 60), g.list.some(function (a) { return a.ph; }) ? el('i', { title: 'Con fotos' }) : null]); }));
-        var fillX = function () {
-          var k = plain(xq.value).trim(); xl.innerHTML = ''; Array.prototype.forEach.call(xbar.children, function (b, i) { b.className = !k && groups[i].name === st.xGrp ? 'on' : ''; });
-          var shown = k ? calc.addons.filter(function (a) { return plain(a.n + ' ' + a.g).indexOf(k) >= 0; }) : groups.filter(function (g) { return g.name === st.xGrp; })[0].list;
+        var go = function (a) { return function () { addonSheet(a, calc); }; };
+        var showList = function (shown, k) {
           if (!shown.length) { xl.appendChild(el('div', { class: 'none', text: 'Ningún extra con ese nombre.' })); return; }
-          var go = function (a) { return function () { addonSheet(a, calc); }; };
           if (shown.some(function (a) { return fotoOf(calc, a) || (wait && a.ph); })) {
             xl.appendChild(el('div', { class: 'xGrid' }, shown.slice(0, 80).map(function (a) { var u = fotoOf(calc, a);
               return el('button', { class: 'xCard', type: 'button', 'data-x': txt(a.n, 80), on: { click: go(a) } }, [u ? el('span', { class: 'ph' }, [el('img', { alt: '', src: u })]) : el('span', { class: 'ph no', text: wait && a.ph ? '…' : txt(a.n, 1).toUpperCase() }), el('span', { class: 'tx' }, [el('b', { text: txt(a.n, 80) }), el('small', { text: addonText(a) })])]); })));
           } else {
             xl.appendChild(el('div', { class: 'cList' }, shown.slice(0, 80).map(function (a) { return el('button', { class: 'cItem', type: 'button', 'data-x': txt(a.n, 80), on: { click: go(a) } }, [el('b', {}, [txt(a.n, 80), k ? el('small', { text: txt(a.g, 60) }) : null]), el('span', { class: 'p x', text: addonText(a) })]); })));
           }
-          if (!k) xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
+        };
+        var fillX = function () {
+          var k = plain(xq.value).trim(); xl.innerHTML = '';
+          if (k) return showList(calc.addons.filter(function (a) { return plain(a.n + ' ' + a.g).indexOf(k) >= 0; }), k);
+          if (!st.xGrp) {
+            // El índice: cada grupo con cuántos extras tiene y si lleva fotos.
+            xl.appendChild(el('div', { class: 'cList cIndex', id: 'grupos' }, groups.map(function (g) { return el('button', { class: 'cItem', type: 'button', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); var cb = document.querySelector('#calculadora .cBody'); if (cb) cb.scrollTop = 0; } } }, [el('b', {}, [txt(g.name, 60), el('small', { text: nUn(g.list.length, 'opción', 'opciones') + (g.list.some(function (a) { return a.ph; }) ? ' · con fotos' : '') })]), el('span', { class: 'chev', text: '›' })]); })));
+            xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
+            return;
+          }
+          var g = groups.filter(function (x) { return x.name === st.xGrp; })[0];
+          if (groups.length > 1) xl.appendChild(el('div', { class: 'cBack' }, [el('button', { type: 'button', id: 'volverExtras', class: 'back', text: '‹ Extras', on: { click: function () { st.xGrp = ''; fillX(); } } }), el('b', { text: txt(g.name, 60) })]));
+          showList(g.list, '');
+          xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
         };
         xq.addEventListener('input', fillX);
-        body.appendChild(xq); if (groups.length > 1) body.appendChild(xbar); body.appendChild(xl); fillX();
+        body.appendChild(xq); body.appendChild(xl); fillX();
       }
     } else {
+      // (3.2.1) Servicios: primero el ÍNDICE de categorías (Manicuras, Pedicuras…); al tocar una, sus servicios
+      // (Semipermanente…) y «‹ Categorías» para volver. El buscador mira en todos.
       var cats = []; calc.services.forEach(function (x) { if (cats.indexOf(x.c) < 0) cats.push(x.c); });
-      if (cats.indexOf(st.cCat) < 0) st.cCat = cats[0] || '';
+      if (cats.length === 1) st.cCat = cats[0]; else if (st.cCat && cats.indexOf(st.cCat) < 0) st.cCat = '';
       var list = el('div', { id: 'servicios' }), q = el('input', { class: 'cSearch', type: 'search', placeholder: 'Buscar un servicio…', autocomplete: 'off' });
-      var bar = el('div', { class: 'cCats' }, cats.map(function (c0) { return el('button', { type: 'button', class: c0 === st.cCat ? 'on' : '', text: txt(c0, 60), on: { click: function () { st.cCat = c0; q.value = ''; fill(); } } }); }));
+      var items = function (shown, k) { list.appendChild(el('div', { class: 'cList' }, shown.slice(0, 80).map(function (x) { return el('button', { class: 'cItem', type: 'button', on: { click: function () { addLine({ kind: 'service', name: x.n, detail: x.c, amount: x.p }); } } }, [el('b', {}, [txt(x.n, 80), el('small', { text: (k ? txt(x.c, 60) + (x.m ? ' · ' : '') : '') + (x.m ? x.m + ' min' : '') })]), el('span', { class: 'p', text: money(x.p) })]); }))); };
       var fill = function () {
-        var k = plain(q.value).trim(); list.innerHTML = ''; Array.prototype.forEach.call(bar.children, function (b, i) { b.className = !k && cats[i] === st.cCat ? 'on' : ''; });
-        var shown = calc.services.filter(function (x) { return k ? plain(x.n + ' ' + x.c).indexOf(k) >= 0 : x.c === st.cCat; });
-        if (!shown.length) { list.appendChild(el('div', { class: 'none', text: k ? 'Ningún servicio con ese nombre.' : 'No hay servicios.' })); return; }
-        list.appendChild(el('div', { class: 'cList' }, shown.slice(0, 80).map(function (x) { return el('button', { class: 'cItem', type: 'button', on: { click: function () { addLine({ kind: 'service', name: x.n, detail: x.c, amount: x.p }); } } }, [el('b', {}, [txt(x.n, 80), el('small', { text: (k ? txt(x.c, 60) + (x.m ? ' · ' : '') : '') + (x.m ? x.m + ' min' : '') })]), el('span', { class: 'p', text: money(x.p) })]); })));
+        var k = plain(q.value).trim(); list.innerHTML = '';
+        if (k) { var hit = calc.services.filter(function (x) { return plain(x.n + ' ' + x.c).indexOf(k) >= 0; }); if (!hit.length) list.appendChild(el('div', { class: 'none', text: 'Ningún servicio con ese nombre.' })); else items(hit, k); return; }
+        if (!cats.length) { list.appendChild(el('div', { class: 'none', text: 'No hay servicios.' })); return; }
+        if (!st.cCat) {
+          list.appendChild(el('div', { class: 'cList cIndex', id: 'categorias' }, cats.map(function (c0) { var n = calc.services.filter(function (x) { return x.c === c0; }).length; return el('button', { class: 'cItem', type: 'button', 'data-cat': txt(c0, 60), on: { click: function () { st.cCat = c0; q.value = ''; fill(); var cb = document.querySelector('#calculadora .cBody'); if (cb) cb.scrollTop = 0; } } }, [el('b', {}, [txt(c0, 60), el('small', { text: nUn(n, 'servicio', 'servicios') })]), el('span', { class: 'chev', text: '›' })]); })));
+          return;
+        }
+        if (cats.length > 1) list.appendChild(el('div', { class: 'cBack' }, [el('button', { type: 'button', id: 'volverServicios', class: 'back', text: '‹ Categorías', on: { click: function () { st.cCat = ''; fill(); } } }), el('b', { text: txt(st.cCat, 60) })]));
+        items(calc.services.filter(function (x) { return x.c === st.cCat; }), '');
       };
       q.addEventListener('input', fill);
-      body.appendChild(q); if (cats.length > 1) body.appendChild(bar); body.appendChild(list); fill();
+      body.appendChild(q); body.appendChild(list); fill();
     }
     pane.appendChild(el('div', { class: 'tkBack', on: { click: function () { setTk(false); } } })); pane.appendChild(ticketBox); pane.appendChild(totalBox); drawTicket();
     return pane;
@@ -641,6 +713,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   }
 
   async function refresh() {
+    if (sessionOver()) return;
     if (!cfg.repo) { st.msg = 'No se sabe de qué repositorio es esta agenda.'; st.ready = true; return render(); }
     st.loading = true; render();
     try {
@@ -669,14 +742,23 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     st.loading = false; st.ready = true; render();
   }
 
+  // (3.2.1) La sesión dura como mucho 12 horas desde que se escribió la contraseña: pasado ese tiempo se borran de la memoria
+  // las contraseñas y sus claves (no hay nada guardado en el aparato) y hay que volver a escribirla. Se mira cada minuto,
+  // al volver a la página y antes de cada actualización; actualizar la agenda NO alarga la sesión.
+  var SESSION_MS = 12 * 3600 * 1000;
+  function sessionOver() {
+    if (!st.loginAt || !(st.pws.length || Object.keys(st.keys).length)) return false;
+    if (Date.now() - st.loginAt < SESSION_MS && Date.now() >= st.loginAt) return false;
+    logout(); st.bad = 'Han pasado 12 horas desde que entraste: por seguridad, escribe la contraseña otra vez.'; render(); return true;
+  }
   async function login(pw) {
     pw = String(pw || ''); if (!pw) return;
-    st.bad = '';
+    st.bad = ''; if (!st.loginAt || !(st.pws.length || Object.keys(st.keys).length)) st.loginAt = Date.now();
     if (st.pws.indexOf(pw) < 0) st.pws.push(pw);
     await refresh();
-    if (st.centers.length && !st.centers.some(function (c) { return c.data; })) { st.pws = st.pws.filter(function (x) { return x !== pw; }); st.bad = 'Contraseña incorrecta.'; render(); }
+    if (st.centers.length && !st.centers.some(function (c) { return c.data; })) { st.pws = st.pws.filter(function (x) { return x !== pw; }); if (!st.pws.length && !Object.keys(st.keys).length) st.loginAt = 0; st.bad = 'Contraseña incorrecta.'; render(); }
   }
-  function logout() { st.pws = []; st.keys = {}; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.xGrp = ''; st.tk = false; st.fotos = {}; st.fRev++; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; st.view = 'cols'; var sh = document.querySelector('.sheetBack'); if (sh) sh.remove(); forget(); render(); }
+  function logout() { st.loginAt = 0; st.cab = -1; st.calM = ''; st.pws = []; st.keys = {}; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.xGrp = ''; st.tk = false; st.fotos = {}; st.fRev++; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; st.view = 'cols'; var sh = document.querySelector('.sheetBack'); if (sh) sh.remove(); forget(); render(); }
   function setView(v) { st.view = v; st.scroll = null; render(); }
 
   // (3.2.0) Fondo de la entrada: el logotipo (la C) pequeño y casi transparente, repartido AL AZAR pero cubriendo toda la
@@ -712,7 +794,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     var creds = st.pws.length || Object.keys(st.keys).length;
     // La entrada: solo el nombre y la contraseña.
     var brand = function () { return el('h1', { text: 'Consentía Studio' }); }, logo = function () { return el('img', { class: 'logo', id: 'logo', alt: '', src: LOGO }); };
-    var bg = function () { app.appendChild(el('div', { class: 'lockBg', 'aria-hidden': 'true' })); app.appendChild(logoField()); }; // (textura y línea dorada; (3.2.0) y las C de fondo)
+    var bg = function () { app.appendChild(logoField()); }; // (3.2.1) solo los logotipos: la C grande y las C pequeñas de fondo (sin líneas)
     var ico = function (d) { var s = svg(d.map(function (x) { return ['path', { d: x }]; })); return s; };
     var locked = !st.ready || !creds || (!opened.length && st.centers.length && !st.loading);
     document.documentElement.className = locked ? 'lock' : ''; // (la entrada no se desplaza; la agenda, sí)
@@ -750,15 +832,52 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
       mBtn('verAgenda', 'agenda', 'Agenda', ICON.agenda, null, function () { st.mode = 'agenda'; st.scroll = null; render(); }),
       mBtn('verCalc', 'calc', 'Calculadora', ICON.calc, [el('small')], function () { st.mode = 'calc'; render(); window.scrollTo(0, 0); })])]));
     st.segGo = false;
-    document.body.className = 'has-modes'; modesBadge();
+    document.body.className = 'has-modes' + (st.tk && st.lines.length ? ' tkOpen' : ''); modesBadge();
     app = pA; // (lo que sigue —días y agenda— se pinta en el panel de la agenda)
     try { renderAgenda(c); } finally { app = root; }
     var hh = root.querySelector('header'); if (hh) document.documentElement.style.setProperty('--hh', hh.offsetHeight + 'px');
     fitGrid();
     if (pane === st.cNode) { var cb2 = pane.querySelector('.cBody'); if (cb2 && cbTop) cb2.scrollTop = cbTop; if (foc && pane.contains(foc)) { try { foc.focus({ preventScroll: true }); } catch (e) { } } }
   }
+  // (3.2.1) Calendario del mes (una ficha, como las demás): ‹ mes ›, la semana empieza en lunes, hoy en rosa y el día
+  // elegido en negro. Los días fuera de lo publicado (de 7 días antes a 30 después) se ven más claros: se puede ir, pero
+  // la página avisa de que ese día no está publicado.
+  var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  function calSheet(d) {
+    st.calM = st.day.slice(0, 7);
+    var box = el('div', { class: 'cal', id: 'calendario' });
+    var draw = function () {
+      box.innerHTML = ''; var p = st.calM.split('-'), y = +p[0], m = +p[1];
+      var first = st.calM + '-01', start = addDays(first, -dow(first)), t = today();
+      var move = function (k) { return function () { var nd = new Date(y, m - 1 + k, 1); st.calM = nd.getFullYear() + '-' + pad(nd.getMonth() + 1); draw(); }; };
+      box.appendChild(el('div', { class: 'calH' }, [el('button', { type: 'button', class: 'calNav', id: 'mesAnterior', 'aria-label': 'Mes anterior', text: '‹', on: { click: move(-1) } }), el('b', { text: MESES[m - 1] + ' ' + y }), el('button', { type: 'button', class: 'calNav', id: 'mesSiguiente', 'aria-label': 'Mes siguiente', text: '›', on: { click: move(1) } })]));
+      var g = el('div', { class: 'calG' }); ['L', 'M', 'X', 'J', 'V', 'S', 'D'].forEach(function (x) { g.appendChild(el('span', { class: 'calW', text: x })); });
+      for (var i = 0; i < 42; i++) {
+        (function (k) {
+          var out = k.slice(0, 7) !== st.calM, pub = d && k >= d.from && k <= d.to;
+          g.appendChild(el('button', { type: 'button', 'data-d': k, class: 'calD' + (out ? ' out' : '') + (k === t ? ' today' : '') + (k === st.day ? ' sel' : '') + (d && !pub ? ' nopub' : ''), title: d && !pub ? 'Fuera de lo publicado' : '', text: String(+k.slice(8)), on: { click: function () { st.day = k; var b = document.querySelector('.sheetBack'); if (b) b.remove(); render(); } } }));
+        })(addDays(start, i));
+      }
+      box.appendChild(g);
+      box.appendChild(el('div', { class: 'calF' }, [el('button', { type: 'button', class: 'calHoy', id: 'irHoy', text: 'Hoy', on: { click: function () { st.day = today(); var b = document.querySelector('.sheetBack'); if (b) b.remove(); render(); } } }), d ? el('small', { text: 'Publicado: del ' + (+d.from.slice(8)) + ' ' + MESES[+d.from.slice(5, 7) - 1].slice(0, 3) + ' al ' + (+d.to.slice(8)) + ' ' + MESES[+d.to.slice(5, 7) - 1].slice(0, 3) }) : null]));
+    };
+    draw(); sheet([box]);
+  }
+  // (3.2.1) Las cabinas, como en la agenda del programa: el nombre de la cabina en su color, dentro de cada cita.
+  function cabOf(a, d) { var l = d && Array.isArray(d.cabins) ? d.cabins : []; var k = typeof a.ki === 'number' ? l[a.ki] : null; return k ? { n: txt(k.n, 30), c: color(k.c) } : a.k ? { n: txt(a.k, 30), c: '#7c4dff' } : null; }
+  function ink(c) { var n = parseInt(String(c).slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) > 160 ? '#111113' : '#fff'; }
+  function cabPill(a, d) { var k = cabOf(a, d); return k ? el('span', { class: 'cabPill', style: 'background:' + k.c + ';color:' + ink(k.c), text: k.n }) : null; }
+  // (3.2.1) El estado de WhatsApp de la cita (uno solo): ✓ ha confirmado (azul), ⟳ quiere cambiar, enviado (verde) o
+  // pendiente de envío (reloj ámbar). Lo calcula el programa al publicar (lib/agenda-movil.js).
+  var WA_ST = { c: ['ok', '✓', 'Ha confirmado'], m: ['chg', '⟳', 'Quiere cambiar la fecha'], e: ['sent', '', 'WhatsApp enviado'], p: ['pend', '', 'WhatsApp pendiente de envío'] };
+  var WA_SVG = { e: [['path', { d: 'M4.5 19.5l1.2-3.6A8 8 0 1 1 8.6 18.7z' }]], p: [['circle', { cx: 12, cy: 12, r: 8 }], ['path', { d: 'M12 7.5V12l3 2' }]] };
+  function waIco(a) { var w = WA_ST[a.w]; if (!w) return null; var n = el('span', { class: 'waSt ' + w[0], title: w[2], 'data-wa': a.w, 'aria-label': w[2] }, w[1] ? [w[1]] : [svg(WA_SVG[a.w])]); return n; }
   function renderAgenda(c) {
-    app.appendChild(el('div', { class: 'days' }, [el('button', { text: '‹', title: 'Día anterior', on: { click: function () { st.day = addDays(st.day, -1); render(); } } }), el('div', { class: 'd', text: longDay(st.day) }), el('button', { text: '›', title: 'Día siguiente', on: { click: function () { st.day = addDays(st.day, 1); render(); } } }), st.day !== today() ? el('button', { class: 'hoy', text: 'Hoy', on: { click: function () { st.day = today(); render(); } } }) : null]));
+    // (3.2.1) El selector de fechas, como el de la agenda del programa: ‹ Hoy › y el recuadro con la fecha, que al tocarlo
+    // despliega el calendario del mes (para saltar a cualquier día sin ir de uno en uno).
+    var dd = c && c.data;
+    app.appendChild(el('div', { class: 'days' }, [el('button', { class: 'nav', text: '‹', title: 'Día anterior', 'aria-label': 'Día anterior', on: { click: function () { st.day = addDays(st.day, -1); render(); } } }), el('button', { class: 'hoy' + (st.day === today() ? ' on' : ''), text: 'Hoy', on: { click: function () { st.day = today(); render(); } } }), el('button', { class: 'nav', text: '›', title: 'Día siguiente', 'aria-label': 'Día siguiente', on: { click: function () { st.day = addDays(st.day, 1); render(); } } }),
+      el('button', { class: 'd', id: 'fecha', type: 'button', title: 'Elegir otro día en el calendario', 'aria-haspopup': 'dialog', on: { click: function () { calSheet(dd); } } }, [svg(ICON.agenda), el('span', { text: longDay(st.day) + (st.day.slice(0, 4) !== today().slice(0, 4) ? ' ' + st.day.slice(0, 4) : '') }), el('i', { text: '▾' })])]));
     var main = el('main');
     if (st.msg) main.appendChild(el('div', { class: 'warn', text: st.msg }));
     if (!c) { main.appendChild(el('div', { class: 'none', text: st.loading ? 'Cargando…' : 'No hay agendas publicadas.' })); app.appendChild(main); return; }
@@ -773,7 +892,8 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     if (day < d.from || day > d.to) main.appendChild(el('div', { class: 'warn', text: 'Ese día está fuera de lo publicado (del ' + longDay(d.from) + ' al ' + longDay(d.to) + ').' }));
     var emps = (d.employees || []).map(function (e) { return { id: e.id, n: txt(e.n, 40), c: color(e.c), sch: e.sch, x: e.x }; });
     var known = {}; emps.forEach(function (e) { known[e.id] = true; });
-    var list = (d.appts || []).filter(function (a) { return a.d === day; });
+    var cabs = Array.isArray(d.cabins) ? d.cabins : []; if (st.cab >= cabs.length) st.cab = -1;
+    var list = (d.appts || []).filter(function (a) { return a.d === day && (st.cab < 0 || a.ki === st.cab); }); // (3.2.1) filtro de cabina
     if (list.some(function (a) { return !a.emp || !known[a.emp]; })) emps.push({ id: '__sin', n: 'Sin asignar', c: '#999999' });
     var blocks = (d.blocks || []).filter(function (b) { return String(b.from).slice(0, 10) <= day && String(b.to).slice(0, 10) >= day; });
     var mineOf = function (e) { return list.filter(function (a) { return e.id === '__sin' ? !a.emp || !known[a.emp] : a.emp === e.id; }); };
@@ -788,7 +908,10 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
         sheet([el('h2', { text: 'Canceladas · ' + longDay(day) })].concat(gone.map(function (a) { var e = emps.filter(function (x) { return x.id === a.emp; })[0]; return el('div', { class: 'row' }, [el('div', { class: 'h', text: txt(a.s, 5) + '–' + txt(a.e, 5) }), el('b', {}, [txt(a.c, 80) || 'Sin clienta', stateTag(a)]), el('div', { class: 'who', text: (e ? e.n : 'Sin asignar') + (a.sv ? ' · ' + txt(a.sv, 200) : '') })]); })));
       } } }));
     }
-    main.appendChild(el('div', { class: 'status' }, [info, el('button', { id: 'vista', text: cols ? 'Ver en lista' : 'Ver en columnas', on: { click: function () { setView(cols ? 'lista' : 'cols'); } } })]));
+    // (3.2.1) «Todas las cabinas» / una cabina (como el filtro de la agenda del programa), si el centro tiene cabinas.
+    var cabSel = null;
+    if (cabs.length) { cabSel = el('select', { id: 'cabina', class: 'cabSel' + (st.cab >= 0 ? ' on' : ''), title: 'Ver solo las citas de una cabina', 'aria-label': 'Cabina', on: { change: function (e) { st.cab = +e.target.value; st.scroll = null; render(); } } }, [el('option', { value: '-1', text: 'Todas las cabinas' })].concat(cabs.map(function (k, i) { return el('option', { value: String(i), text: txt(k.n, 30) }); }))); cabSel.value = String(st.cab); }
+    main.appendChild(el('div', { class: 'status' }, [info, cabSel, el('button', { id: 'vista', text: cols ? 'Ver en lista' : 'Ver en columnas', on: { click: function () { setView(cols ? 'lista' : 'cols'); } } })]));
 
     if (!cols) {
       /* ----- lista: las citas de cada trabajadora, una debajo de otra ----- */
@@ -800,7 +923,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
         bl.forEach(function (b) { var s = String(b.from).slice(0, 10) < day || b.all ? '' : String(b.from).slice(11, 16), t = String(b.to).slice(0, 10) > day || b.all ? '' : String(b.to).slice(11, 16); items.push({ k: s || '00:00', node: el('div', { class: 'it blk' + (b.v ? ' vac' : '') }, [el('div', { class: 'h', text: s && t ? s + '–' + t : 'Todo el día' }), el('div', { class: 'w' }, [el('b', { text: txt(b.r, 60) })])]) }); });
         mine.forEach(function (a) {
           var ac = apColor(a, e, d);
-          items.push({ k: txt(a.s, 5), node: el('div', { class: 'it' + (a.st === 'x' || a.st === 'n' ? ' x' : '') + (ac.pc ? ' paid' : ''), style: '--c:' + ac.c + ';--bg:' + tint(ac.c, 0.3), on: { click: function () { apptSheet(a, e.n, d); } } }, [el('div', { class: 'h', text: txt(a.s, 5) + '–' + txt(a.e, 5) }), el('div', { class: 'w' }, [el('b', {}, [txt(a.c, 80) || 'Sin clienta', stateTag(a)])].concat(notes(a), [el('small', { text: txt(a.sv, 200) + (a.k ? ' · ' + txt(a.k, 30) : '') })]))]) });
+          items.push({ k: txt(a.s, 5), node: el('div', { class: 'it' + (a.st === 'x' || a.st === 'n' ? ' x' : '') + (ac.pc ? ' paid' : ''), style: '--c:' + ac.c + ';--bg:' + tint(ac.c, 0.3), on: { click: function () { apptSheet(a, e.n, d); } } }, [el('div', { class: 'h', text: txt(a.s, 5) + '–' + txt(a.e, 5) }), el('div', { class: 'w' }, [el('b', {}, [txt(a.c, 80) || 'Sin clienta', stateTag(a), waIco(a), cabPill(a, d)])].concat(notes(a), [el('small', { text: txt(a.sv, 200) })]))]) });
         });
         items.sort(function (x, y) { return x.k < y.k ? -1 : x.k > y.k ? 1 : 0; });
         main.appendChild(el('section', { class: 'emp' }, [el('h3', {}, [el('span', { class: 'dot', style: 'background:' + e.c }), e.n])].concat(items.map(function (i) { return i.node; }))));
@@ -839,7 +962,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
           var ac = apColor(it.a, e, d), done = ac.done, pc = ac.pc;
           var c1 = ac.c, h = Math.max(22, (it.e - it.s) * PX - 2), w = 100 / it.lanes;
           col.appendChild(el('div', { class: 'ap' + (done ? ' done' : '') + (pc ? ' paid' : '') + (it.a.st === 'o' ? ' offer' : ''), style: '--c:' + c1 + ';--bg:' + tint(c1, pc ? 0.32 : 0.22) + ';top:' + (it.s - a0) * PX + 'px;height:' + h + 'px;left:calc(' + it.lane * w + '% + 2px);width:calc(' + w + '% - 4px)', on: { click: function () { apptSheet(it.a, e.n, d); } } },
-            [el('span', { class: 't', text: txt(it.a.s, 5) + '–' + txt(it.a.e, 5) + (it.a.k ? ' · ' + txt(it.a.k, 30) : '') }), el('b', { text: txt(it.a.c, 80) || 'Sin clienta' })].concat(notes(it.a), [el('span', { class: 's', text: txt(it.a.sv, 200) })])));
+            [el('div', { class: 'apTop' }, [el('span', { class: 't', text: txt(it.a.s, 5) + '–' + txt(it.a.e, 5) }), el('span', { class: 'ic' }, [cabPill(it.a, d), waIco(it.a)])]), el('b', { text: txt(it.a.c, 80) || 'Sin clienta' })].concat(notes(it.a), [el('span', { class: 's', text: txt(it.a.sv, 200) })])));
         });
         if (nowMin >= a0 && nowMin <= a1) col.appendChild(el('div', { class: 'now', style: 'top:' + (nowMin - a0) * PX + 'px' }));
         grid.appendChild(col);
@@ -859,10 +982,11 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
 
   forget(); st.ready = true; render();
   setInterval(function () { if ((st.pws.length || Object.keys(st.keys).length) && !document.hidden) refresh(); }, 5 * 60 * 1000);
+  setInterval(sessionOver, 60 * 1000); // (3.2.1) 12 horas como mucho
   window.addEventListener('resize', fitGrid);
   window.addEventListener('hashchange', function () { var w = wanted(); if (!w) return; var i = st.centers.findIndex(function (c) { return centerSlug(c) === w; }); if (i >= 0) { if (i !== st.cur) { st.cur = i; st.scroll = null; render(); } } else st.want = w; });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var b = document.querySelector('.sheetBack'); if (b) b.remove(); } });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden && (st.pws.length || Object.keys(st.keys).length) && (!st.lastCheck || Date.now() - Date.parse(st.lastCheck) > 60000)) refresh(); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && sessionOver()) return; if (!document.hidden && (st.pws.length || Object.keys(st.keys).length) && (!st.lastCheck || Date.now() - Date.parse(st.lastCheck) > 60000)) refresh(); });
 })();
 </script>
 </body>
