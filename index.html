@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="3.2.1">
-<meta name="consentia-agenda-firma" content="nk2VCvFbTY8JYEtoEzPUkglbtZwjvaU1ys6sbiBAAoNczFTxlTRbUUVZpifqLCwacbJtYsnry+ZJWzXulPIpAg==">
+<meta name="consentia-agenda-version" content="3.2.2">
+<meta name="consentia-agenda-firma" content="3mwJgeg2yQo6i5cILDfWOrRNObyTg82+0FKYhNtxSaX1p6rc03CUvR6IIZBfB9WlbLKLwCxITVueskjHGtBKCQ==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-S7bErpJrp7Wkgza/nxVJCBqKJeOT4UEzJm974498o8Y='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-1q/9QsegMwGeUun3wrsjcS+ICZDBuVMb0cd0I8yrGJ8='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
@@ -301,10 +301,14 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   .calc{height:100%;min-height:0}
   .cBody{flex:1 1 auto;overflow:auto;min-height:140px}
   .cCats{flex-wrap:wrap;overflow:visible;margin:0;padding:0 0 10px}
-  .cTicket{display:none;flex:0 1 auto;max-height:52%;overflow:auto;border-top:1px solid var(--line);padding:12px 14px 6px}
+  /* (3.2.2) En el ordenador la cuenta y el total van DENTRO de la columna de la calculadora, uno debajo del otro: la
+     cuenta ocupa lo que haga falta (como mucho el 52 % del alto; si no cabe, se desplaza ella) y la lista de arriba
+     encoge. El total ya no hereda las distancias de la barra flotante del móvil (left/right/bottom): antes, con
+     «position:relative», esas distancias lo movían hacia arriba y hacia la derecha y tapaba la cuenta. */
+  .cTicket{display:none;flex:0 1 auto;min-height:0;max-height:52%;overflow:auto;overscroll-behavior:contain;border-top:1px solid var(--line);padding:12px 14px 6px}
   .calc.tk .cTicket{display:block;position:relative;z-index:7}
   .cTicket h4 button.x{display:none}
-  .cTotal{position:relative;z-index:8;width:100%;border-radius:0;box-shadow:none;cursor:pointer}
+  .cTotal{flex:none;position:relative;left:auto;right:auto;bottom:auto;z-index:8;width:100%;border-radius:0;box-shadow:none;cursor:pointer}
   /* (3.2.1) Con la cuenta abierta, en el ordenador también se oscurece el resto de la pantalla (igual que en el móvil);
      tocando fuera se cierra. */
   .calc.tk .tkBack{display:block;position:fixed;top:0;left:0;right:0;bottom:0;z-index:6;background:rgba(17,17,19,.4)}
@@ -474,8 +478,9 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     var calc = calcOf(d), miss = 0; st.lines = []; st.disc = -1;
     (a.si || []).forEach(function (i) { var s = calc.services[i]; if (s) st.lines.push({ kind: 'service', name: txt(s.n, 80), detail: txt(s.c, 60), amount: r2(s.p) }); else miss++; });
     st.from = (txt(a.c, 80) || 'Sin clienta') + ' · ' + txt(a.s, 5) + (miss ? ' · ' + (miss === 1 ? 'falta 1 servicio que ya no está en la lista' : 'faltan ' + miss + ' servicios que ya no están en la lista') : '');
-    st.mode = 'calc'; st.cTab = 'extras'; st.tk = false; st.cNode = null; render(); window.scrollTo(0, 0);
+    st.mode = 'calc'; st.cTab = 'extras'; st.xGrp = ''; st.tk = false; st.cNode = null; st.cTop = true; render(); window.scrollTo(0, 0);
   }
+  function goTab(id) { st.cTab = id; st.cCat = ''; st.xGrp = ''; st.cTop = true; st.cNode = null; render(); } // (cNode = null: se rehace aunque sea la misma pestaña; la cuenta no se toca)
   function modesBadge() { var b = document.querySelector('.modes small'); if (b) { var c = st.centers[st.cur]; b.textContent = st.lines.length ? money(totals(calcOf(c && c.data)).total) : ''; } }
 
   /* ---------- fotos de los extras ---------- */
@@ -566,7 +571,10 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     totalBox = el('button', { class: 'cTotal', id: 'total', type: 'button', title: 'Ver la cuenta', on: { click: function () { if (st.lines.length) setTk(!st.tk); } } });
     st.cNode = pane; st.cKey = key;
     if (!calc) { pane.appendChild(el('div', { class: 'cBody' }, [el('div', { class: 'warn', id: 'sinPrecios', text: d ? 'Este centro todavía no publica su lista de precios. Se activa en el programa: Ajustes → Agenda móvil (web) → «Calculadora en la misma página».' : 'Abre primero la agenda de un centro.' })])); ticketBox = totalBox = null; return pane; }
-    var tab = function (id, label) { return el('button', { type: 'button', class: st.cTab === id ? 'on' : '', 'data-tab': id, text: label, on: { click: function () { st.cTab = id; render(); } } }); };
+    // (3.2.2) Al cambiar de pestaña (Servicios ↔ Extras ↔ Bonos) se empieza siempre por el ÍNDICE de la pestaña a la que
+    // se va (sus categorías o sus grupos), arriba del todo: no se queda la categoría, el grupo ni el desplazamiento de
+    // antes. Igual en el ordenador, la tableta y el móvil. (Si solo hay una categoría o un grupo, se abre ese.)
+    var tab = function (id, label) { return el('button', { type: 'button', class: st.cTab === id ? 'on' : '', 'data-tab': id, text: label, on: { click: function () { goTab(id); } } }); };
     pane.appendChild(el('div', { class: 'cTabs' }, [tab('serv', 'Servicios'), tab('extras', 'Extras'), calc.bonos.length ? tab('bonos', 'Bonos') : null]));
     var body = el('div', { class: 'cBody' }); pane.appendChild(body);
     var plain = function (t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); };
@@ -837,7 +845,8 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     try { renderAgenda(c); } finally { app = root; }
     var hh = root.querySelector('header'); if (hh) document.documentElement.style.setProperty('--hh', hh.offsetHeight + 'px');
     fitGrid();
-    if (pane === st.cNode) { var cb2 = pane.querySelector('.cBody'); if (cb2 && cbTop) cb2.scrollTop = cbTop; if (foc && pane.contains(foc)) { try { foc.focus({ preventScroll: true }); } catch (e) { } } }
+    if (st.cTop) { st.cTop = false; var cb3 = pane.querySelector('.cBody'); if (cb3) cb3.scrollTop = 0; if (st.mode === 'calc' && window.innerWidth < 1040) window.scrollTo(0, 0); } // (3.2.2) pestaña nueva: arriba del todo
+    else if (pane === st.cNode) { var cb2 = pane.querySelector('.cBody'); if (cb2 && cbTop) cb2.scrollTop = cbTop; if (foc && pane.contains(foc)) { try { foc.focus({ preventScroll: true }); } catch (e) { } } }
   }
   // (3.2.1) Calendario del mes (una ficha, como las demás): ‹ mes ›, la semana empieza en lunes, hoy en rosa y el día
   // elegido en negro. Los días fuera de lo publicado (de 7 días antes a 30 después) se ven más claros: se puede ir, pero
