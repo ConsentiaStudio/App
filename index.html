@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="3.2.2">
-<meta name="consentia-agenda-firma" content="3mwJgeg2yQo6i5cILDfWOrRNObyTg82+0FKYhNtxSaX1p6rc03CUvR6IIZBfB9WlbLKLwCxITVueskjHGtBKCQ==">
+<meta name="consentia-agenda-version" content="3.2.3">
+<meta name="consentia-agenda-firma" content="RLUvgOa5KVOCoUvPkHAtPHPWZMn6oUoUg57o7JJiffKAdOe+MLQNT0Gti5c8ariUwumCcnZyL+lGSb6t7AFSDg==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-1q/9QsegMwGeUun3wrsjcS+ICZDBuVMb0cd0I8yrGJ8='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-/msuya73vImC2Rlmf82WnZGeEGDE2CPdqOEikGktQiY='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
@@ -240,7 +240,9 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
 /* (3.2.1) Índice de categorías / grupos y «‹ volver» */
 .cIndex .cItem b{font-weight:700}.cIndex .chev{flex:none;font-size:22px;line-height:1;color:#b9b6b0}
 .cBack{display:flex;align-items:center;gap:10px;margin:0 0 10px}
-.cBack .back{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font:inherit;font-size:13.5px;font-weight:700;color:var(--ink);-webkit-tap-highlight-color:transparent}
+.cBack .back{flex:none;border:1px solid #7c4dff;background:#7c4dff;border-radius:999px;padding:7px 13px;font:inherit;font-size:13.5px;font-weight:700;color:#fff;-webkit-tap-highlight-color:transparent} /* (3.2.3) «‹ Categorías» y «‹ Extras», en morado */
+.cBack .back:active{background:#6a3df0}
+.cSec+.cSec{margin-top:12px}.cSecName{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 4px 6px}
 .cBack b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Ficha de un extra */
 .sheet .xFoto{display:block;width:100%;max-height:38vh;object-fit:contain;border-radius:12px;background:#f4f2ee;margin-bottom:12px}
@@ -586,7 +588,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     } else if (st.cTab === 'extras') {
       // (3.2.1) Primero el ÍNDICE de grupos (Francesa, Nail art…); al tocar uno, sus extras (con foto, en baldosas; sin foto,
       // en lista) y «‹ Extras» para volver al índice. El buscador, arriba, mira en todos. Al tocar un extra sube su ficha.
-      var groups = []; calc.addons.forEach(function (a) { var g = groups.filter(function (x) { return x.name === a.g; })[0]; if (!g) groups.push(g = { name: a.g, list: [] }); g.list.push(a); });
+      var groups = []; calc.addons.forEach(function (a) { var g = groups.filter(function (x) { return x.name === a.g; })[0]; if (!g) groups.push(g = { name: a.g, s: txt(a.s, 40), list: [] }); g.list.push(a); });
       if (!groups.length) body.appendChild(el('div', { class: 'none', text: 'Este centro no tiene extras de uñas.' }));
       else {
         if (groups.length === 1) st.xGrp = groups[0].name; else if (st.xGrp && !groups.some(function (g) { return g.name === st.xGrp; })) st.xGrp = '';
@@ -606,7 +608,10 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
           if (k) return showList(calc.addons.filter(function (a) { return plain(a.n + ' ' + a.g).indexOf(k) >= 0; }), k);
           if (!st.xGrp) {
             // El índice: cada grupo con cuántos extras tiene y si lleva fotos.
-            xl.appendChild(el('div', { class: 'cList cIndex', id: 'grupos' }, groups.map(function (g) { return el('button', { class: 'cItem', type: 'button', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); var cb = document.querySelector('#calculadora .cBody'); if (cb) cb.scrollTop = 0; } } }, [el('b', {}, [txt(g.name, 60), el('small', { text: nUn(g.list.length, 'opción', 'opciones') + (g.list.some(function (a) { return a.ph; }) ? ' · con fotos' : '') })]), el('span', { class: 'chev', text: '›' })]); })));
+            // (3.2.3) Los grupos en sus dos apartados, como en el programa: «Decoraciones fijas» y «Otras categorías».
+            var secs = []; groups.forEach(function (g) { var sc = secs.filter(function (x) { return x.name === g.s; })[0]; if (!sc) secs.push(sc = { name: g.s, list: [] }); sc.list.push(g); });
+            var gItem = function (g) { return el('button', { class: 'cItem', type: 'button', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); var cb = document.querySelector('#calculadora .cBody'); if (cb) cb.scrollTop = 0; } } }, [el('b', {}, [txt(g.name, 60), el('small', { text: nUn(g.list.length, 'opción', 'opciones') + (g.list.some(function (a) { return a.ph; }) ? ' · con fotos' : '') })]), el('span', { class: 'chev', text: '›' })]); };
+            xl.appendChild(el('div', { class: 'cIndex', id: 'grupos' }, secs.map(function (sc) { return el('div', { class: 'cSec' }, [sc.name ? el('div', { class: 'cSecName', text: sc.name }) : null, el('div', { class: 'cList' }, sc.list.map(gItem))]); })));
             xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
             return;
           }
