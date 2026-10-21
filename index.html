@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="3.2.4">
-<meta name="consentia-agenda-firma" content="rtAOd9zvX/hc6jJxwedHOlSGMonjDF0T5myyTSfgO7k+J7FqgYPglQhGKZrjvkzzDvrAPBnF5QkXjfSU1OnGCA==">
+<meta name="consentia-agenda-version" content="3.2.5">
+<meta name="consentia-agenda-firma" content="naTFz6GrcZDXDBNo9eLpixMWUm5fBZDw4jqPyo9NketDrtRhpOUevq5xuiyVn3umWP9bSykbqZqg129CjGejCg==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-Tb1dDVvwXo7bTFuH9IgnbUu1CPTR5QDERrXJhybZ2R4='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-htIcy2a9b+gf88koSD4u5HJl8WKQLXx4ggIZGvgAunE='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Agenda y calculadora · Consentía Studio</title>
@@ -348,7 +348,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   // pws: contraseñas escritas en esta visita. keys: claves ya calculadas (por sal). Las dos, solo en memoria: al
   // cerrar o recargar la página hay que escribir la contraseña otra vez.
   // fotos: las fotos de los extras de cada centro, por la huella que trae su lista de precios (se bajan una vez).
-  var st = { pws: [], keys: {}, branches: [], centers: [], cur: 0, day: today(), msg: '', bad: '', loading: false, ready: false, lastCheck: null, cached: false, view: 'cols', scroll: null, stale: '', fresh: '', want: '', mode: 'agenda', lines: [], disc: -1, from: '', cTab: 'serv', cCat: '', xGrp: '', tk: false, cKey: '', cNode: null, fotos: {}, fRev: 0, loginAt: 0, cab: -1, calM: '' };
+  var st = { pws: [], keys: {}, branches: [], centers: [], cur: 0, day: today(), msg: '', bad: '', loading: false, ready: false, lastCheck: null, cached: false, view: 'cols', scroll: null, stale: '', fresh: '', want: '', mode: 'agenda', lines: [], disc: -1, from: '', cTab: 'serv', cCat: '', xGrp: '', xCat: '', tk: false, cKey: '', cNode: null, fotos: {}, fRev: 0, loginAt: 0, cab: -1, calM: '' };
   st.want = wanted(); // centro pedido en la dirección (…/#getafe)
 
   /* ---------- en el aparato no se guarda nada ---------- */
@@ -374,6 +374,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   // colores (agenda de antes), el texto de siempre. Y la estrella de las clientas VIP.
   function svNodes(a) { if (!Array.isArray(a.sx) || !a.sx.length) return [txt(a.sv, 200)]; var out = []; a.sx.slice(0, 12).forEach(function (x, i) { if (i) out.push(el('span', { class: 'svP', text: ' + ' })); out.push(el('span', { class: 'svI' }, [el('i', { class: 'svM', style: 'background:' + color(x && x[1]) }), txt(x && x[0], 80)])); }); return out; }
   function vipStar(a) { return a && a.vip ? el('span', { class: 'vipStar', title: 'Clienta VIP', text: '★' }) : null; }
+  function xcDot(calc, c0) { var m = calc && calc.xc; return m && m[c0] ? el('i', { class: 'svM', style: 'background:' + color(m[c0]) }) : null; } // (3.2.5) color de la categoría de extras
   function catDot(calc, c0) { var m = calc && calc.cc; return m && m[c0] ? el('i', { class: 'svM', style: 'background:' + color(m[c0]) }) : null; }
   function txt(v, n) { return String(v == null ? '' : v).slice(0, n || 200); }
   // Dirección de un centro: …/#getafe abre directamente su pestaña (el programa da ese enlace en cada centro). Es el
@@ -438,7 +439,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
   function mShort(v) { return money(v).replace(',00', ''); }
   function nUn(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
   function objs(v, n) { return (Array.isArray(v) ? v : []).slice(0, n).map(function (x) { return x && typeof x === 'object' && !Array.isArray(x) ? x : {}; }); } // (lo que no sea un objeto, vacío: los servicios se señalan por su posición)
-  function calcOf(d) { var c = d && d.calc; return c && typeof c === 'object' && Array.isArray(c.services) ? { services: objs(c.services, 400), addons: objs(c.addons, 200), bonos: objs(c.bonos, 60), discounts: objs(c.discounts, 30), fotos: typeof c.fotos === 'string' && /^[0-9a-f]{8,64}$/.test(c.fotos) ? c.fotos : '', cc: ccOf(c.cc) } : null; }
+  function calcOf(d) { var c = d && d.calc; return c && typeof c === 'object' && Array.isArray(c.services) ? { services: objs(c.services, 400), addons: objs(c.addons, 200), bonos: objs(c.bonos, 60), discounts: objs(c.discounts, 30), fotos: typeof c.fotos === 'string' && /^[0-9a-f]{8,64}$/.test(c.fotos) ? c.fotos : '', cc: ccOf(c.cc), xc: ccOf(c.xc) } : null; }
   // (3.2.4) El color de cada categoría: solo nombres de texto con un color #rrggbb (lo demás se ignora).
   function ccOf(m) { var out = {}; if (m && typeof m === 'object' && !Array.isArray(m)) Object.keys(m).slice(0, 60).forEach(function (k) { if (/^#[0-9a-f]{6}$/i.test(String(m[k] || ''))) out[txt(k, 60)] = m[k]; }); return out; }
   // Lo mismo que hace el programa al cobrar (renderer/js/core/domain.js → addonPrice / addonPriceText).
@@ -493,9 +494,9 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     var calc = calcOf(d), miss = 0; st.lines = []; st.disc = -1;
     (a.si || []).forEach(function (i) { var s = calc.services[i]; if (s) st.lines.push({ kind: 'service', name: txt(s.n, 80), detail: txt(s.c, 60), amount: r2(s.p) }); else miss++; });
     st.from = (txt(a.c, 80) || 'Sin clienta') + ' · ' + txt(a.s, 5) + (miss ? ' · ' + (miss === 1 ? 'falta 1 servicio que ya no está en la lista' : 'faltan ' + miss + ' servicios que ya no están en la lista') : '');
-    st.mode = 'calc'; st.cTab = 'extras'; st.xGrp = ''; st.tk = false; st.cNode = null; st.cTop = true; render(); window.scrollTo(0, 0);
+    st.mode = 'calc'; st.cTab = 'extras'; st.xGrp = ''; st.xCat = ''; st.tk = false; st.cNode = null; st.cTop = true; render(); window.scrollTo(0, 0);
   }
-  function goTab(id) { st.cTab = id; st.cCat = ''; st.xGrp = ''; st.cTop = true; st.cNode = null; render(); } // (cNode = null: se rehace aunque sea la misma pestaña; la cuenta no se toca)
+  function goTab(id) { st.cTab = id; st.cCat = ''; st.xGrp = ''; st.xCat = ''; st.cTop = true; st.cNode = null; render(); } // (cNode = null: se rehace aunque sea la misma pestaña; la cuenta no se toca)
   function modesBadge() { var b = document.querySelector('.modes small'); if (b) { var c = st.centers[st.cur]; b.textContent = st.lines.length ? money(totals(calcOf(c && c.data)).total) : ''; } }
 
   /* ---------- fotos de los extras ---------- */
@@ -578,7 +579,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     var d = c && c.data, calc = calcOf(d);
     var json = JSON.stringify(d ? d.calc || null : null), key = (c ? c.key : '') + '|' + json + '|' + st.cTab + '|' + st.fRev;
     if (st.cNode && st.cKey === key) { calcData = calc; drawTicket(); return st.cNode; } // (misma lista de precios: no se rehace lo que se estaba escribiendo)
-    if (st.cKey.split('|')[0] !== (c ? c.key : '')) { st.lines = []; st.disc = -1; st.from = ''; st.cCat = ''; st.xGrp = ''; st.tk = false; } // otro centro: otros precios
+    if (st.cKey.split('|')[0] !== (c ? c.key : '')) { st.lines = []; st.disc = -1; st.from = ''; st.cCat = ''; st.xGrp = ''; st.xCat = ''; st.tk = false; } // otro centro: otros precios
     else if (st.cJson !== json) st.disc = -1; // han cambiado los precios del centro: el descuento se vuelve a elegir
     st.cJson = json;
     var pane = el('aside', { class: 'calc' + (st.tk && st.lines.length ? ' tk' : ''), id: 'calculadora', 'aria-label': 'Calculadora' });
@@ -601,10 +602,13 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     } else if (st.cTab === 'extras') {
       // (3.2.1) Primero el ÍNDICE de grupos (Francesa, Nail art…); al tocar uno, sus extras (con foto, en baldosas; sin foto,
       // en lista) y «‹ Extras» para volver al índice. El buscador, arriba, mira en todos. Al tocar un extra sube su ficha.
-      var groups = []; calc.addons.forEach(function (a) { var g = groups.filter(function (x) { return x.name === a.g; })[0]; if (!g) groups.push(g = { name: a.g, s: txt(a.s, 40), list: [] }); g.list.push(a); });
-      if (!groups.length) body.appendChild(el('div', { class: 'none', text: 'Este centro no tiene extras de uñas.' }));
+      // (3.2.5) Por CATEGORÍAS, como en el programa: primero el índice de categorías (con su color); al tocar una, sus
+      // grupos si tiene varios (Decoraciones fijas → Colores lisos, Francesa y baby boomer…) o directamente sus extras;
+      // «‹ Extras» / «‹ <categoría>» vuelven un paso. El buscador, arriba, mira en todos. Al tocar un extra sube su ficha.
+      var cats = []; calc.addons.forEach(function (a) { var cn = txt(a.k || a.s || a.g, 60) || 'Extras', c = cats.filter(function (x) { return x.name === cn; })[0]; if (!c) cats.push(c = { name: cn, groups: [] }); var g = c.groups.filter(function (x) { return x.name === a.g; })[0]; if (!g) c.groups.push(g = { name: a.g, list: [] }); g.list.push(a); });
+      if (!cats.length) body.appendChild(el('div', { class: 'none', text: 'Este centro no tiene extras de uñas.' }));
       else {
-        if (groups.length === 1) st.xGrp = groups[0].name; else if (st.xGrp && !groups.some(function (g) { return g.name === st.xGrp; })) st.xGrp = '';
+        if (cats.length === 1) st.xCat = cats[0].name; else if (st.xCat && !cats.some(function (c) { return c.name === st.xCat; })) { st.xCat = ''; st.xGrp = ''; }
         var xq = el('input', { class: 'cSearch', id: 'buscarExtra', type: 'search', placeholder: 'Buscar un extra…', autocomplete: 'off' }), xl = el('div', { id: 'extras' }), wait = fotosWait(calc);
         var go = function (a) { return function () { addonSheet(a, calc); }; };
         var showList = function (shown, k) {
@@ -616,22 +620,31 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
             xl.appendChild(el('div', { class: 'cList' }, shown.slice(0, 80).map(function (a) { return el('button', { class: 'cItem', type: 'button', 'data-x': txt(a.n, 80), on: { click: go(a) } }, [el('b', {}, [txt(a.n, 80), k ? el('small', { text: txt(a.g, 60) }) : null]), el('span', { class: 'p x', text: addonText(a) })]); })));
           }
         };
+        var toTop = function () { var cb = document.querySelector('#calculadora .cBody'); if (cb) cb.scrollTop = 0; };
+        var hint = function () { xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' })); };
+        var nOpt = function (list) { return nUn(list.length, 'opción', 'opciones') + (list.some(function (a) { return a.ph; }) ? ' · con fotos' : ''); };
         var fillX = function () {
           var k = plain(xq.value).trim(); xl.innerHTML = '';
           if (k) return showList(calc.addons.filter(function (a) { return plain(a.n + ' ' + a.g).indexOf(k) >= 0; }), k);
-          if (!st.xGrp) {
-            // El índice: cada grupo con cuántos extras tiene y si lleva fotos.
-            // (3.2.3) Los grupos en sus dos apartados, como en el programa: «Decoraciones fijas» y «Otras categorías».
-            var secs = []; groups.forEach(function (g) { var sc = secs.filter(function (x) { return x.name === g.s; })[0]; if (!sc) secs.push(sc = { name: g.s, list: [] }); sc.list.push(g); });
-            var gItem = function (g) { return el('button', { class: 'cItem', type: 'button', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); var cb = document.querySelector('#calculadora .cBody'); if (cb) cb.scrollTop = 0; } } }, [el('b', {}, [txt(g.name, 60), el('small', { text: nUn(g.list.length, 'opción', 'opciones') + (g.list.some(function (a) { return a.ph; }) ? ' · con fotos' : '') })]), el('span', { class: 'chev', text: '›' })]); };
-            xl.appendChild(el('div', { class: 'cIndex', id: 'grupos' }, secs.map(function (sc) { return el('div', { class: 'cSec' }, [sc.name ? el('div', { class: 'cSecName', text: sc.name }) : null, el('div', { class: 'cList' }, sc.list.map(gItem))]); })));
-            xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
-            return;
+          var C = cats.filter(function (c) { return c.name === st.xCat; })[0];
+          if (C && C.groups.length === 1) st.xGrp = C.groups[0].name; else if (C && st.xGrp && !C.groups.some(function (g) { return g.name === st.xGrp; })) st.xGrp = '';
+          if (!C) {
+            var catItem = function (c) { var all = []; c.groups.forEach(function (g) { all = all.concat(g.list); }); var one = c.groups.length === 1;
+              var at = { class: 'cItem', type: 'button', 'data-xcat': txt(c.name, 60), on: { click: function () { st.xCat = c.name; st.xGrp = one ? c.groups[0].name : ''; xq.value = ''; fillX(); toTop(); } } }; if (one) at['data-grp'] = txt(c.groups[0].name, 60);
+              return el('button', at, [el('b', {}, [xcDot(calc, c.name), txt(c.name, 60), el('small', { text: (one ? '' : nUn(c.groups.length, 'grupo', 'grupos') + ' · ') + nOpt(all) })]), el('span', { class: 'chev', text: '›' })]); };
+            xl.appendChild(el('div', { class: 'cIndex', id: 'grupos' }, [el('div', { class: 'cList' }, cats.map(catItem))]));
+            return hint();
           }
-          var g = groups.filter(function (x) { return x.name === st.xGrp; })[0];
-          if (groups.length > 1) xl.appendChild(el('div', { class: 'cBack' }, [el('button', { type: 'button', id: 'volverExtras', class: 'back', text: '‹ Extras', on: { click: function () { st.xGrp = ''; fillX(); } } }), el('b', { text: txt(g.name, 60) })]));
+          if (!st.xGrp) {
+            xl.appendChild(el('div', { class: 'cBack' }, [el('button', { type: 'button', id: 'volverExtras', class: 'back', text: '‹ Extras', on: { click: function () { st.xCat = ''; st.xGrp = ''; fillX(); toTop(); } } }), el('b', {}, [xcDot(calc, C.name), txt(C.name, 60)])]));
+            xl.appendChild(el('div', { class: 'cList', id: 'gruposCat' }, C.groups.map(function (g) { return el('button', { class: 'cItem', type: 'button', 'data-grp': txt(g.name, 60), on: { click: function () { st.xGrp = g.name; xq.value = ''; fillX(); toTop(); } } }, [el('b', {}, [txt(g.name, 60), el('small', { text: nOpt(g.list) })]), el('span', { class: 'chev', text: '›' })]); })));
+            return hint();
+          }
+          var g = C.groups.filter(function (x) { return x.name === st.xGrp; })[0];
+          if (C.groups.length > 1) xl.appendChild(el('div', { class: 'cBack' }, [el('button', { type: 'button', id: 'volverCategoria', class: 'back', text: '‹ ' + txt(C.name, 40), on: { click: function () { st.xGrp = ''; fillX(); toTop(); } } }), el('b', { text: txt(g.name, 60) })]));
+          else if (cats.length > 1) xl.appendChild(el('div', { class: 'cBack' }, [el('button', { type: 'button', id: 'volverExtras', class: 'back', text: '‹ Extras', on: { click: function () { st.xCat = ''; st.xGrp = ''; fillX(); toTop(); } } }), el('b', {}, [xcDot(calc, C.name), txt(g.name, 60)])]));
           showList(g.list, '');
-          xl.appendChild(el('div', { class: 'cHint', text: '«/ uña» se cobra por cada uña decorada; el resto, una vez. Si el diseño lleva varias técnicas, se añade cada una.' }));
+          hint();
         };
         xq.addEventListener('input', fillX);
         body.appendChild(xq); body.appendChild(xl); fillX();
@@ -784,7 +797,7 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
     await refresh();
     if (st.centers.length && !st.centers.some(function (c) { return c.data; })) { st.pws = st.pws.filter(function (x) { return x !== pw; }); if (!st.pws.length && !Object.keys(st.keys).length) st.loginAt = 0; st.bad = 'Contraseña incorrecta.'; render(); }
   }
-  function logout() { st.loginAt = 0; st.cab = -1; st.calM = ''; st.pws = []; st.keys = {}; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.xGrp = ''; st.tk = false; st.fotos = {}; st.fRev++; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; st.view = 'cols'; var sh = document.querySelector('.sheetBack'); if (sh) sh.remove(); forget(); render(); }
+  function logout() { st.loginAt = 0; st.cab = -1; st.calM = ''; st.pws = []; st.keys = {}; st.centers = []; st.branches = []; st.lines = []; st.disc = -1; st.from = ''; st.cKey = ''; st.cNode = null; st.cJson = ''; st.cTab = 'serv'; st.cCat = ''; st.xGrp = ''; st.xCat = ''; st.tk = false; st.fotos = {}; st.fRev++; ticketBox = totalBox = calcData = null; st.mode = 'agenda'; st.view = 'cols'; var sh = document.querySelector('.sheetBack'); if (sh) sh.remove(); forget(); render(); }
   function setView(v) { st.view = v; st.scroll = null; render(); }
 
   // (3.2.0) Fondo de la entrada: el logotipo (la C) pequeño y casi transparente, repartido AL AZAR pero cubriendo toda la
