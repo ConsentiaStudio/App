@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="consentia-agenda-version" content="4.7.5">
-<meta name="consentia-agenda-firma" content="Gzt0VAOVVMnKZwPwgFP4rfqaCXwX8EPXRDGSgUcGlm3e7I55MeQnvXj7M18sf8AAkk7Ykmg7FeX4C6Rda0cIBQ==">
+<meta name="consentia-agenda-version" content="4.7.7">
+<meta name="consentia-agenda-firma" content="9gRo+08vDJwhJpsdr5l/zY5qoowpeuURLfQ12Bj9bmc1dws2UDP4jjzh14cr+0D8KGu3WBpZ5KHDk4pC/e2OAw==">
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-zcqbrxfr629Mo6SZuxfFVHEV6k4Jt5HiKjbik+5OPKg=' 'sha256-B5bXe5twp1g9JsQ04Qhk3M7+cDXzA68R9jfdFaUzylo='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data: 'self'; manifest-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-zcqbrxfr629Mo6SZuxfFVHEV6k4Jt5HiKjbik+5OPKg=' 'sha256-6VHvb8FlmZiE0w7bL54XOfwMVgBq2+noE+iOxh8badQ='; connect-src https://api.github.com https://raw.githubusercontent.com; img-src data: 'self'; manifest-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#111113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -243,6 +243,8 @@ html.lock body{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--pag
 .login #entrar:active{transform:translateY(1px)}
 .login #entrar svg{stroke:#fff;width:18px;height:18px}
 .login .lfoot{margin:24px 0 0;text-align:center;font-size:13px}
+.login .kitLnk{margin-top:40px;font-size:11.5px;opacity:.6} /* (4.7.7) el kit, discreto: es solo de la empresaria */
+.login .instSteps{margin:14px 0} /* (4.7.7) los pasos del iPhone en la tarjeta */
 .login .bad,.login .warn{text-align:left;margin-top:14px}
 @media (max-width:560px){
   .lwrap{align-content:start;padding:14px 16px 30px}
@@ -461,7 +463,9 @@ body.has-modes .pA main:not(.wide),body.has-modes .pC{padding-bottom:calc(var(--
 .accPill.agenda{background:#eaf2fd;color:#1f5fbf}.accPill.numeros{background:#e3f5ea;color:#1d8a4a}.accPill.control{background:var(--pinkSoft);color:#c2006b}
 .accPill.ok{background:#e3f5ea;color:#1d8a4a}.accPill.w{background:#fff4d6;color:#7a5600}
 .accCodeS{font:800 18px ui-monospace,Consolas,monospace;letter-spacing:.12em}
-.accFrame{display:block;width:100%;border:0;height:calc(100vh - var(--hh,56px) - var(--mh) - env(safe-area-inset-bottom) - 16px);background:var(--bg)}
+/* (4.7.6) Números llega hasta abajo, por detrás de la barra translúcida, como las demás pestañas (antes acababa 16 px antes
+   y se veía una franja blanca); el espacio de la barra lo deja la propia página de Números (body.embed main). */
+.accFrame{display:block;width:100%;border:0;height:calc(100vh - var(--hh,56px));height:calc(100dvh - var(--hh,56px));background:var(--bg)}
 .accQr{display:flex;flex-direction:column;align-items:center;margin-top:12px}.accQr svg{width:240px;height:240px;max-width:100%}
 .sheet select{width:100%;margin-top:12px;padding:10px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 .sheet button.danger{background:#c2103f}
@@ -840,9 +844,12 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); INST.prompt = e; });
   function isStandalone() { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } }
   function isIOS() { return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  // (4.7.7) En el iPhone, Safari y la app instalada NO comparten nada: lo que se pide en Safari no lo ve el icono.
+  function iosSafari() { return isIOS() && !isStandalone() && window.parent === window; }
+  function iosApp() { return isIOS() && isStandalone(); }
   function instKv(v) { return temaDb().then(function (db) { return new Promise(function (res) { var tx = db.transaction('k', v === undefined ? 'readonly' : 'readwrite'), os = tx.objectStore('k'); var q = v === undefined ? os.get('instalar') : os.put(v, 'instalar'); q.onsuccess = function () { res(q.result); }; q.onerror = function () { res(null); }; tx.oncomplete = function () { db.close(); }; }); }); }
   async function instCheck() {
-    if (INST.shown || isStandalone() || window.parent !== window || navigator.webdriver) return; INST.shown = true;
+    if (INST.shown || isStandalone() || window.parent !== window || navigator.webdriver || acc.iosFirst) return; INST.shown = true;
     var android = /android/i.test(navigator.userAgent); if (!isIOS() && !android && !INST.prompt) return;
     var until = 0; try { until = +(await instKv()) || 0; } catch (e) { } if (until > Date.now() || document.querySelector('.sheetBack')) return;
     var steps = isIOS() ? [['Toca ', 'Compartir', ' abajo en Safari'], ['Elige ', 'Añadir a pantalla de inicio', ''], ['Toca ', 'Añadir', ' arriba a la derecha']]
@@ -1082,7 +1089,11 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
     sq.addEventListener('input', drawSvc);
 
     /* 3 · cuándo */
+    // (4.7.6) «Abrir mes»: los días de un mes sin abrir no se pueden elegir (lo vuelve a comprobar el ordenador).
+    var shut = function (k) { return !!(d.ou && String(k).slice(0, 7) > d.ou); };
+    var monthTxt = function (ym) { return ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][+String(ym).slice(5) - 1] + ' de ' + String(ym).slice(0, 4); };
     var day = el('input', { type: 'date', id: 'cDia', value: edit && !(mover && a.d < today()) ? a.d : (st.day && st.day >= today() ? st.day : today()), min: edit && !mover ? '' : today() });
+    if (d.ou) { var ouY = +d.ou.slice(0, 4), ouM = +d.ou.slice(5); var ouL = new Date(ouY, ouM, 0); day.max = ouY + '-' + String(ouM).padStart(2, '0') + '-' + String(ouL.getDate()).padStart(2, '0'); } // (4.7.6)
     var time = el('input', { type: 'time', id: 'cHora', step: '300', value: edit ? txt(a.s, 5) : '' });
     var dur = el('input', { type: 'number', id: 'cDur', min: '5', max: '600', step: '5', value: edit ? String(a.du || 30) : '30', inputmode: 'numeric' });
     var note = el('input', { type: 'text', id: 'cNota', maxlength: '200', placeholder: 'Opcional', value: edit && a.n ? txt(a.n, 200) : '' });
@@ -1093,8 +1104,8 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
     var drawDays = function () {
       days.innerHTML = ''; var t0 = today(), first = edit && !mover && a.d < t0 ? a.d : t0, list2 = []; for (var i = 0; i < 21; i++) list2.push(addD(first, i)); if (list2.indexOf(day.value) < 0 && day.value) list2.unshift(day.value);
       list2.forEach(function (k) { var lbl = k === t0 ? 'Hoy' : k === addD(t0, 1) ? 'Mañana' : DN[dow(k)];
-        var cz = dayClosed(d, k); /* (4.6.1) «Cerrado», como en la app de las clientas (se puede elegir igualmente) */
-        days.appendChild(el('button', { type: 'button', class: 'ncDay' + (k === day.value ? ' on' : '') + (cz ? ' closed' : ''), 'data-d': k, title: cz ? 'El centro está cerrado ese día' : null, on: { click: function () { day.value = k; drawDays(); drawSlots(); warn(); } } }, [el('small', { text: lbl }), el('b', { text: String(+k.slice(8, 10)) }), cz ? el('em', { text: 'Cerrado' }) : null])); });
+        var cz = dayClosed(d, k); /* (4.6.1) «Cerrado», como en la app de las clientas (se puede elegir igualmente) */ var no = shut(k); /* (4.7.6) mes sin abrir: no se puede elegir */
+        days.appendChild(el('button', { type: 'button', class: 'ncDay' + (k === day.value ? ' on' : '') + (cz || no ? ' closed' : ''), 'data-d': k, disabled: no ? 'disabled' : null, title: no ? 'Mes sin abrir: no se dan citas' : cz ? 'El centro está cerrado ese día' : null, on: { click: function () { if (no) return; day.value = k; drawDays(); drawSlots(); warn(); } } }, [el('small', { text: lbl }), el('b', { text: String(+k.slice(8, 10)) }), no ? el('em', { text: 'Sin abrir' }) : cz ? el('em', { text: 'Cerrado' }) : null])); });
       var on = days.querySelector('.on'); if (on) setTimeout(function () { try { on.scrollIntoView({ block: 'nearest', inline: 'center' }); } catch (e) { } }, 0);
     };
     var drawEmps = function () { empBar.innerHTML = ''; emps.forEach(function (e) { empBar.appendChild(el('button', { type: 'button', class: 'ncEmp' + (e.id === empSel ? ' on' : ''), 'data-e': e.id, style: e.id === empSel ? 'border-color:' + color(e.c) + ';background:' + tint(color(e.c), 0.14) : '', on: { click: function () { empSel = e.id; drawEmps(); drawSlots(); warn(); } } }, [el('span', { class: 'ncDot', style: 'background:' + color(e.c) }), txt(e.n, 40)])); }); };
@@ -1168,6 +1179,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
         if (open === 'cli' && !okStep('cli')) return toast(newC ? 'Escribe su nombre y su teléfono.' : 'Elige a la clienta de la lista o crea una nueva (nombre y teléfono).');
         if (open === 'serv' && !pick.length) return toast('Elige al menos un servicio.'); next(open); } } });
       var giveB = el('button', { type: 'button', class: 'ncNext', id: 'guardarCita', text: mover ? 'Mover la cita' : edit ? 'Guardar los cambios' : '✓ Dar la cita', on: { click: async function () {
+        if (shut(day.value) && !(edit && a.d === day.value)) return toast('La agenda está abierta hasta ' + monthTxt(d.ou) + ': más adelante no se dan citas.'); // (4.7.6)
         if (mover && day.value < today()) return toast('Una cita cobrada solo se mueve hacia delante: hoy o un día que venga.');
         if (!edit && !client && !(newC && nn.value.trim() && nt.value.replace(/\D/g, '').length >= 9)) return toast('Elige a la clienta de la lista o crea una nueva (nombre y teléfono).');
         if (!pick.length) return toast('Elige al menos un servicio.'); if (!day.value || !time.value) return toast('Elige el día y la hora (toca una hora libre o escribe otra).'); if (!empSel) return toast('Elige con quién.');
@@ -1640,7 +1652,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
     else if (pane === st.cNode) { var cb2 = pane.querySelector('.cBody'); if (cb2 && cbTop) cb2.scrollTop = cbTop; if (foc && pane.contains(foc)) { try { foc.focus({ preventScroll: true }); } catch (e) { } } }
   }
   // (3.2.1) Calendario del mes (una ficha, como las demás): ‹ mes ›, la semana empieza en lunes, hoy en rosa y el día
-  // elegido en negro. Los días fuera de lo publicado (de 7 días antes a 30 después) se ven más claros: se puede ir, pero
+  // elegido en negro. Los días fuera de lo publicado (desde la 4.7.6, del mes pasado a un año después) se ven más claros: se puede ir, pero
   // la página avisa de que ese día no está publicado.
   var MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
   function calSheet(d) {
@@ -1692,6 +1704,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
     var old = (Date.now() - Date.parse(d.at)) / 60000;
     if (old > 75) main.appendChild(el('div', { class: 'warn', text: 'Esta agenda se publicó ' + ago(d.at) + '. Si el ordenador del centro está apagado o sin Internet, los últimos cambios no aparecen.' }));
     if (day < d.from || day > d.to) main.appendChild(el('div', { class: 'warn', text: 'Ese día está fuera de lo publicado (del ' + longDay(d.from) + ' al ' + longDay(d.to) + ').' }));
+    if (d.ou && day.slice(0, 7) > d.ou) main.appendChild(el('div', { class: 'warn', id: 'mesSinAbrir', text: 'Mes sin abrir: la agenda está abierta hasta el final de ' + ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][+d.ou.slice(5) - 1] + '. No se dan citas más adelante.' })); // (4.7.6)
     var emps = (d.employees || []).map(function (e) { return { id: e.id, n: txt(e.n, 40), c: color(e.c), sch: e.sch, x: e.x }; });
     var known = {}; emps.forEach(function (e) { known[e.id] = true; });
     var cabs = Array.isArray(d.cabins) ? d.cabins : []; if (st.cab >= cabs.length) st.cab = -1;
@@ -2030,6 +2043,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
   /* ---------- pantallas de acceso (sin entrar todavía) ---------- */
   function accScreen(card) {
     if (acc.kit) return screenKit(card), true;
+    if (acc.inv && acc.iosFirst && !acc.rec) return screenIosFirst(card), true; // (4.7.7)
     if (acc.inv && acc.state !== 'activo' && acc.state !== 'pendiente') return screenRequest(card), true;
     if (acc.state === 'pendiente' && acc.me) return screenWait(card), true;
     if (acc.state === 'rechazada') return screenRejected(card), true;
@@ -2054,7 +2068,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
     var exp = acc.inv && Date.now() > acc.inv.exp;
     card([el('div', { class: 'eyebrow', text: 'Pedir acceso' }), el('h1', { text: 'Solicitar acceso' }),
       el('p', { text: 'Escribe tu nombre y apellido y elige tu contraseña. El Administrador del local o la empresaria tienen que aprobarlo antes de que puedas entrar.' }),
-      exp ? el('div', { class: 'bad', text: 'Este QR ha caducado (dura 30 minutos). Pide otro en el local.' }) : form, errBox(), el('p', { class: 'lfoot', text: 'Tu contraseña no sale de este móvil.' })]);
+      exp ? el('div', { class: 'bad', id: 'qrCaducado', text: 'Este QR ha caducado (dura 30 minutos). Pide otro en el local.' + (iosApp() ? ' En el iPhone: borra este icono de la pantalla de inicio, escanea el QR nuevo y sigue los pasos que salen en Safari.' : '') }) : form, errBox(), el('p', { class: 'lfoot', text: 'Tu contraseña no sale de este móvil.' })]);
   }
   function screenWait(card) {
     card([el('div', { class: 'eyebrow', text: 'Pedir acceso' }), el('h1', { text: 'Esperando aprobación' }), el('p', { text: (acc.rec && acc.rec.name ? acc.rec.name + ' · ' : '') + 'Cuando lo aprueben, esta pantalla se abre sola. Si cierras la app, al volver solo te pedirá tu contraseña.' }),
@@ -2090,12 +2104,26 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
     card([el('div', { class: 'eyebrow', text: 'Kit de recuperación' }), el('h1', { text: 'Recuperar el control' }), el('p', { text: 'Con el kit que imprimiste, este móvil pasa a tener Control total. Lo hace un ordenador de la empresa en 1 o 2 minutos.' }), form, errBox(),
       el('p', { class: 'lfoot' }, [el('button', { class: 'lnk', type: 'button', text: 'Volver', on: { click: function () { acc.kit = false; acc.msg = ''; render(); } } })])]);
   }
+  // (4.7.7) iPhone, en Safari, recién escaneado el QR: primero se instala la app y la solicitud se hace DENTRO de ella
+  // (la invitación se queda en la dirección, detrás de «#», y el icono la guarda; nunca se manda a ningún servidor).
+  function screenIosFirst(card) {
+    var ml = document.querySelector('link[rel="manifest"]'); if (ml) ml.remove(); // sin manifiesto, el icono guarda ESTA dirección (con la invitación), no la de inicio
+    var hh = new Date(acc.inv.exp), hora = String(hh.getHours()).padStart(2, '0') + ':' + String(hh.getMinutes()).padStart(2, '0');
+    var steps = [['Toca ', 'Compartir', ' abajo en Safari'], ['Elige ', 'Añadir a pantalla de inicio', ''], ['Toca ', 'Añadir', ' arriba a la derecha'], ['Abre la app desde el ', 'icono nuevo', ' y pide acceso allí']];
+    card([el('div', { class: 'eyebrow', text: 'Pedir acceso · iPhone' }), el('h1', { text: 'Primero, instala la app' }),
+      el('p', { text: 'En el iPhone, Safari y la app de la pantalla de inicio no comparten nada: si pides acceso aquí, la app instalada no lo sabrá. Por eso se pide desde la app.' }),
+      el('div', { class: 'instSteps', id: 'pasosIphone' }, steps.map(function (x, i) { return el('div', { class: 'instStep' }, [el('i', { text: String(i + 1) }), el('span', {}, [x[0], el('b', { text: x[1] }), x[2]])]); })),
+      el('div', { class: 'warn', id: 'hastaHora', text: 'Este QR vale hasta las ' + hora + '. Si caduca, pide otro en el local.' }), errBox(),
+      el('p', { class: 'lfoot' }, [el('button', { class: 'lnk', type: 'button', id: 'seguirSafari', text: 'Prefiero usarla solo en Safari', on: { click: function () { acc.iosFirst = false; acc.msg = ''; dropHash(); render(); } } })])]);
+  }
   // (4.3.0) Un móvil sin acceso: solo puede escanear el QR del local o recuperar el control con el kit.
+  // (4.7.7) El kit, discreto (es solo de la empresaria); en la app instalada del iPhone, qué hacer si se pidió en Safari.
   function screenEntry(card) {
     card([el('div', { class: 'eyebrow', text: 'Agenda y calculadora' }), el('h1', { text: 'Bienvenida' }),
       el('p', { id: 'escanea', text: 'Escanea el QR del local con la cámara del móvil para pedir acceso. El QR sale en el ordenador del local: Ajustes → Accesos a la app.' }),
+      iosApp() ? el('div', { class: 'warn', id: 'iphoneAyuda', text: '¿Pediste acceso desde Safari? Esta app no lo ve (en el iPhone no comparten nada). Sigue entrando por Safari, o borra este icono, escanea un QR nuevo del local y sigue los pasos que salen.' }) : null,
       st.msg ? el('div', { class: 'warn', text: st.msg }) : null, st.fresh ? el('div', { class: 'warn', id: 'nueva', text: 'La página se ha actualizado (versión ' + st.fresh + ').' }) : null, errBox(),
-      el('p', { class: 'lfoot', id: 'accAyuda' }, [el('button', { class: 'lnk', type: 'button', id: 'conKit', text: 'Recuperar con el kit', on: { click: function () { acc.kit = true; acc.msg = ''; render(); } } })])]);
+      el('p', { class: 'lfoot kitLnk', id: 'accAyuda' }, [el('button', { class: 'lnk', type: 'button', id: 'conKit', text: 'Solo la empresaria: recuperar con el kit', on: { click: function () { acc.kit = true; acc.msg = ''; render(); } } })])]);
   }
 
   /* ---------- la barra de abajo según el acceso ---------- */
@@ -2303,7 +2331,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
   async function bootAcc() {
     if (!SC || !window.indexedDB || !cfg.repo) return false;
     var rec = await aget('yo'), inv = readInvite(location.hash);
-    if (inv) { st.want = ''; if (!rec) { acc.inv = inv; dropHash(); return true; } dropHash(); }
+    if (inv) { st.want = ''; if (!rec) { acc.inv = inv; if (iosSafari() && Date.now() < inv.exp) acc.iosFirst = true; else dropHash(); return true; } dropHash(); } // (4.7.7) iPhone: primero instalar
     if (!rec) return false;
     acc.rec = rec; acc.state = rec.state;
     var s = await aget('sesion');
@@ -2319,7 +2347,7 @@ html[data-theme=oscuro] .upd{background:#2b2210;color:#ffd98a;border-color:#5a47
   // Si en este aparato hay una sesión de menos de 7 días, se entra sin escribir la contraseña.
   forget(); st.ready = false; st.booting = true; render();
   bootAcc().catch(function () { return false; }).then(function (a) { st.booting = false; if (a === 'listo') return; st.ready = true; render(); });
-  window.addEventListener('hashchange', function () { var inv = readInvite(location.hash); if (inv && !acc.rec) { acc.inv = inv; acc.msg = ''; dropHash(); render(); } });
+  window.addEventListener('hashchange', function () { var inv = readInvite(location.hash); if (inv && !acc.rec) { acc.inv = inv; acc.msg = ''; if (iosSafari() && Date.now() < inv.exp) acc.iosFirst = true; else dropHash(); render(); } });
   setInterval(function () { if (v2On() && !document.hidden) refresh(); }, 5 * 60 * 1000);
   // (4.3.1) Lo que puede ver este móvil se mira cada 15 s (un archivo pequeño, sin la API): si le cambian el acceso (otro
   // nivel, otros locales) o se lo quitan, se nota al momento, sin esperar a la vuelta de 5 minutos.
